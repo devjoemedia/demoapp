@@ -1,0 +1,69 @@
+/* @import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap"); */
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400&display=swap");
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  margin: 0 !important;
+  padding: 0 !important;
+  font-family: "Poppins", sans-serif;
+}
+
+.active-link {
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  color: #004c46;
+  border-left: 4px solid #f7bc45;
+  background: rgba(247, 188, 69, 0.2);
+  width: 100%;
+  box-sizing: border-box;
+  padding: 20px;
+}
+.link {
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  color: #444;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 20px;
+}
+.active-link:hover,
+.link:hover {
+  color: #004c46;
+}
+
+.btn:focus,
+.btn-primary:focus,
+.btn-secondary:focus,
+.btn-danger:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.categoryItem:hover {
+  color: white;
+  background-color: #004c46;
+}
+
+.pagination .page-link,
+.pagination .page-link:hover {
+  color: #004c46;
+}
+.pagination .page-item.active .page-link {
+  background: #004c46;
+  outline: none;
+  border-color: #004c46;
+}

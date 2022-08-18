@@ -1,0 +1,19 @@
+.link {
+  text-decoration: "none";
+  display: "flex";
+  align-items: "center";
+  margin: 0;
+  color: "#444";
+  width: "100%";
+}
+
+.activeLink {
+  text-decoration: "none";
+  display: "flex";
+  align-items: "center";
+  margin: 0;
+  color: "#004c46";
+  border-left: "5px solid #f7bc45";
+  background: "rgba(247, 188, 69, 0.2)";
+  width: "100%";
+}
