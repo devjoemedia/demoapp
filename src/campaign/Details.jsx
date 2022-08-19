@@ -4,12 +4,59 @@ import { BsFillTagFill } from "react-icons/bs";
 import ProgressBar from "@ramonak/react-progress-bar";
 import { useState } from "react";
 import { FaRegUser } from "react-icons/fa";
+import { usePaystackPayment } from "react-paystack";
+import { useParams } from "react-router-dom";
 
 const Details = () => {
+  const [fullName, setFullName] = useState("Annanymouse");
+  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
+  const [amount, setAmount] = useState("");
+  const [message, setMessage] = useState("");
+
+  const { id } = useParams("id");
+
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+
+  const config = {
+    reference: new Date().getTime().toString(),
+    email,
+    amount: amount * 100,
+    currency: "GHS",
+    publicKey: process.env.REACT_APP_PAYSTACK_PUBLIC_KEY,
+    metadata: {
+      campaignId: id,
+      fullName,
+      phone,
+      message,
+    },
+  };
+
+  const onSuccess = (reference) => {
+    console.log(reference);
+    setShow(false);
+  };
+
+  const onClose = () => {
+    console.log("closed");
+    setShow(true);
+  };
+
+  const initializePayment = usePaystackPayment(config);
+
+  const handlePayment = () => {
+    if (email === "") {
+      return;
+    }
+    if (amount <= 0) {
+      return;
+    }
+
+    initializePayment(onSuccess, onClose);
+  };
 
   return (
     <>
@@ -320,25 +367,69 @@ const Details = () => {
           <Modal.Header closeButton>
             <Modal.Title>make donation</Modal.Title>
           </Modal.Header>
+          <div className="mx-3">
+            <small>please email is required*</small>
+          </div>
           <Modal.Body>
             <Form>
               <Form.Group
                 className="mb-3"
                 controlId="exampleForm.ControlInput1"
               >
-                <Form.Label>Email address</Form.Label>
+                <Form.Label>Full Name</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="John Doe"
+                  autoFocus
+                  onChange={(e) => setFullName(e.target.value)}
+                />
+              </Form.Group>
+              <Form.Group
+                className="mb-3"
+                controlId="exampleForm.ControlInput1"
+              >
+                <Form.Label>Email* </Form.Label>
                 <Form.Control
                   type="email"
                   placeholder="name@example.com"
                   autoFocus
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </Form.Group>
+              <Form.Group
+                className="mb-3"
+                controlId="exampleForm.ControlInput1"
+              >
+                <Form.Label>Phone</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="0546655665"
+                  autoFocus
+                  onChange={(e) => setPhone(e.target.value)}
+                />
+              </Form.Group>
+              <Form.Group
+                className="mb-3"
+                controlId="exampleForm.ControlInput1"
+              >
+                <Form.Label>Amount* </Form.Label>
+                <Form.Control
+                  type="number"
+                  placeholder="100"
+                  autoFocus
+                  onChange={(e) => setAmount(e.target.value)}
                 />
               </Form.Group>
               <Form.Group
                 className="mb-3"
                 controlId="exampleForm.ControlTextarea1"
               >
-                <Form.Label>Example textarea</Form.Label>
-                <Form.Control as="textarea" rows={3} />
+                <Form.Label>Message</Form.Label>
+                <Form.Control
+                  as="textarea"
+                  rows={3}
+                  onChange={(e) => setMessage(e.target.value)}
+                />
               </Form.Group>
             </Form>
           </Modal.Body>
@@ -360,7 +451,6 @@ const Details = () => {
             </Button>
             <Button
               variant="primary"
-              onClick={handleClose}
               style={{
                 color: "#fff",
                 backgroundColor: "#004c46",
@@ -370,6 +460,7 @@ const Details = () => {
                 border: "1px solid #004c46",
                 marginLeft: "10px",
               }}
+              onClick={handlePayment}
             >
               Donate
             </Button>
