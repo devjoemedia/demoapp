@@ -1,15 +1,8 @@
-import React, { useEffect } from "react";
-import Router from "./Router";
-import MainRouter from "./MainRouter";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { setTransactions } from "./redux/actions";
-import { useDispatch } from "react-redux";
-import useGetTransactions from "./hooks/useGetTransactions";
 
-function App() {
-  const dispatch = useDispatch();
-
-  const transactions = useGetTransactions();
+const useGetTransactions = () => {
+  const [transactions, setTransactions] = useState([]);
 
   useEffect(() => {
     const fetchData = () => {
@@ -32,8 +25,8 @@ function App() {
               ...item.metadata,
             };
           });
-          console.log(data);
-          dispatch(setTransactions(data));
+
+          setTransactions(data);
         })
         .catch((err) => console.log(err));
     };
@@ -41,8 +34,7 @@ function App() {
     fetchData();
   }, []);
 
-  return <MainRouter />;
-  // return <Router />;
-}
+  return transactions;
+};
 
-export default App;
+export default useGetTransactions;

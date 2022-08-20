@@ -2,10 +2,13 @@ import { Button, Col, Container, Form, Modal, Row } from "react-bootstrap";
 import Help from "../images/help.jpeg";
 import { BsFillTagFill } from "react-icons/bs";
 import ProgressBar from "@ramonak/react-progress-bar";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaRegUser } from "react-icons/fa";
 import { usePaystackPayment } from "react-paystack";
 import { useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
+import moment from "moment";
+import millify from "millify";
 
 const Details = () => {
   const [fullName, setFullName] = useState("Annanymouse");
@@ -13,6 +16,12 @@ const Details = () => {
   const [email, setEmail] = useState("");
   const [amount, setAmount] = useState("");
   const [message, setMessage] = useState("");
+
+  const transactions = useSelector((state) => state.transactions);
+
+  useEffect(() => {
+    console.log({ transactions });
+  });
 
   const { id } = useParams("id");
 
@@ -37,6 +46,14 @@ const Details = () => {
 
   const onSuccess = (reference) => {
     console.log(reference);
+    const transactionDetails = {
+      reference: reference,
+      amount: amount,
+      campaignId: id,
+      fullName,
+      phone,
+      message,
+    };
     setShow(false);
   };
 
@@ -57,6 +74,8 @@ const Details = () => {
 
     initializePayment(onSuccess, onClose);
   };
+
+  const campaignTransactions = transactions.slice(0, 5);
 
   return (
     <>
@@ -126,134 +145,44 @@ const Details = () => {
 
             <div className="d-flex align-items-center justify-content-between  my-3 mt-4">
               <h5 style={{ fontSize: "14px" }}>Last 5 donations</h5>
-              <h5 style={{ fontSize: "14px" }}>2k donations</h5>
+              <h5 style={{ fontSize: "14px" }}>
+                {millify(transactions?.length)} donations
+              </h5>
             </div>
 
-            <div
-              className="d-flex justify-content-between align-items-center my-3 "
-              style={{ fontSize: "12px" }}
-            >
-              <div className="d-flex align-items-center">
+            {campaignTransactions.length > 0 &&
+              campaignTransactions.slice(0, 5).map((transaction) => (
                 <div
-                  style={{
-                    width: "40px",
-                    height: "40px",
-                    borderRadius: "50%",
-                    background: "#f1f1f1",
-                    padding: "0px",
-                  }}
-                  className="me-2 d-flex align-items-center justify-content-center"
+                  key={transaction.reference}
+                  className="d-flex justify-content-between align-items-center my-3 "
+                  style={{ fontSize: "12px" }}
                 >
-                  <FaRegUser size={22} />
-                </div>
-                <div>
-                  <p className="m-0 p-0 text-dark">Jane Doe</p>
-                  <p className="m-0 p-0 text-muted">28 min ago</p>
-                </div>
-              </div>
+                  <div className="d-flex align-items-center">
+                    <div
+                      style={{
+                        width: "40px",
+                        height: "40px",
+                        borderRadius: "50%",
+                        background: "#f1f1f1",
+                        padding: "0px",
+                      }}
+                      className="me-2 d-flex align-items-center justify-content-center"
+                    >
+                      <FaRegUser size={22} />
+                    </div>
+                    <div>
+                      <p className="m-0 p-0 text-dark">
+                        {transaction.fullName}
+                      </p>
+                      <p className="m-0 p-0 text-muted">
+                        {moment(transaction.createdAt).fromNow()}
+                      </p>
+                    </div>
+                  </div>
 
-              <p>$40.00</p>
-            </div>
-            <div
-              className="d-flex justify-content-between align-items-center my-3 "
-              style={{ alignItems: "center", fontSize: "12px" }}
-            >
-              <div className="d-flex align-items-center">
-                <div
-                  style={{
-                    width: "40px",
-                    height: "40px",
-                    borderRadius: "50%",
-                    background: "#f1f1f1",
-                    padding: "0px",
-                  }}
-                  className="me-2 d-flex align-items-center justify-content-center"
-                >
-                  <FaRegUser size={22} />
+                  <p>${(transaction.amount / 100).toFixed(2)}</p>
                 </div>
-                <div>
-                  <p className="m-0 p-0 text-dark">Jane Doe</p>
-                  <p className="m-0 p-0 text-muted">28 min ago</p>
-                </div>
-              </div>
-
-              <p>$40.00</p>
-            </div>
-            <div
-              className="d-flex justify-content-between align-items-center my-3 "
-              style={{ alignItems: "center", fontSize: "12px" }}
-            >
-              <div className="d-flex align-items-center">
-                <div
-                  style={{
-                    width: "40px",
-                    height: "40px",
-                    borderRadius: "50%",
-                    background: "#f1f1f1",
-                    padding: "0px",
-                  }}
-                  className="me-2 d-flex align-items-center justify-content-center"
-                >
-                  <FaRegUser size={22} />
-                </div>
-                <div>
-                  <p className="m-0 p-0 text-dark">Jane Doe</p>
-                  <p className="m-0 p-0 text-muted">28 min ago</p>
-                </div>
-              </div>
-
-              <p>$40.00</p>
-            </div>
-            <div
-              className="d-flex justify-content-between align-items-center my-3 "
-              style={{ alignItems: "center", fontSize: "12px" }}
-            >
-              <div className="d-flex align-items-center">
-                <div
-                  style={{
-                    width: "40px",
-                    height: "40px",
-                    borderRadius: "50%",
-                    background: "#f1f1f1",
-                    padding: "0px",
-                  }}
-                  className="me-2 d-flex align-items-center justify-content-center"
-                >
-                  <FaRegUser size={22} />
-                </div>
-                <div>
-                  <p className="m-0 p-0 text-dark">Jane Doe</p>
-                  <p className="m-0 p-0 text-muted">28 min ago</p>
-                </div>
-              </div>
-
-              <p>$40.00</p>
-            </div>
-            <div
-              className="d-flex justify-content-between align-items-center my-3 "
-              style={{ alignItems: "center", fontSize: "12px" }}
-            >
-              <div className="d-flex align-items-center">
-                <div
-                  style={{
-                    width: "40px",
-                    height: "40px",
-                    borderRadius: "50%",
-                    background: "#f1f1f1",
-                    padding: "0px",
-                  }}
-                  className="me-2 d-flex align-items-center justify-content-center"
-                >
-                  <FaRegUser size={22} />
-                </div>
-                <div>
-                  <p className="m-0 p-0 text-dark">Jane Doe</p>
-                  <p className="m-0 p-0 text-muted">28 min ago</p>
-                </div>
-              </div>
-
-              <p>$40.00</p>
-            </div>
+              ))}
 
             <Button
               style={{
