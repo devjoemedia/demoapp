@@ -34,7 +34,7 @@ const useGetTransactions = () => {
     fetchData();
   }, []);
 
-  return transactions;
+  return [transactions];
 };
 
 export default useGetTransactions;

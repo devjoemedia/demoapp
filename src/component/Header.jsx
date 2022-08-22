@@ -107,7 +107,7 @@ export default function Header() {
                   style={{ cursor: "pointer" }}
                 >
                   <div>
-                    <p className="m-0 text-dark">Jane Doe</p>
+                    <p className="m-0 text-dark">{user.fullName}</p>
                   </div>
                   <div
                     style={{

@@ -2,13 +2,15 @@ import { Button, Col, Container, Form, Modal, Row } from "react-bootstrap";
 import Help from "../images/help.jpeg";
 import { BsFillTagFill } from "react-icons/bs";
 import ProgressBar from "@ramonak/react-progress-bar";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { FaRegUser } from "react-icons/fa";
 import { usePaystackPayment } from "react-paystack";
 import { useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
 import moment from "moment";
 import millify from "millify";
+import { saveTransactionToFirebase } from "../redux/actions";
+import useGetCampaignTransactions from "../hooks/useGetCampaignTransactions";
+import NumberFormat from "react-number-format";
 
 const Details = () => {
   const [fullName, setFullName] = useState("Annanymouse");
@@ -16,19 +18,11 @@ const Details = () => {
   const [email, setEmail] = useState("");
   const [amount, setAmount] = useState("");
   const [message, setMessage] = useState("");
-
-  const transactions = useSelector((state) => state.transactions);
-
-  useEffect(() => {
-    console.log({ transactions });
-  });
+  const [show, setShow] = useState(false);
 
   const { id } = useParams("id");
 
-  const [show, setShow] = useState(false);
-
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const { transactions, totalDonations } = useGetCampaignTransactions(id);
 
   const config = {
     reference: new Date().getTime().toString(),
@@ -45,15 +39,18 @@ const Details = () => {
   };
 
   const onSuccess = (reference) => {
-    console.log(reference);
     const transactionDetails = {
-      reference: reference,
-      amount: amount,
+      reference: reference.reference,
+      status: reference.status,
+      amount: amount * 100,
       campaignId: id,
       fullName,
       phone,
       message,
+      createdAt: Date.now(),
     };
+
+    saveTransactionToFirebase(transactionDetails);
     setShow(false);
   };
 
@@ -75,7 +72,11 @@ const Details = () => {
     initializePayment(onSuccess, onClose);
   };
 
-  const campaignTransactions = transactions.slice(0, 5);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
+  let billAmount = 50000;
+  const percentageDonated = ((totalDonations / billAmount) * 100).toFixed(2);
 
   return (
     <>
@@ -98,8 +99,15 @@ const Details = () => {
                 </p>
               </Col>
               <Col style={{ justifyContent: "end", display: "flex" }}>
-                <span className="text-muted">$42,000</span>
-                <p>(82%)</p>
+                <span className="text-muted">
+                  <NumberFormat
+                    value={totalDonations}
+                    displayType={"text"}
+                    thousandSeparator={true}
+                    prefix={"$"}
+                  />
+                </span>
+                <p> ({percentageDonated}%)</p>
               </Col>
             </Row>
             <ProgressBar
@@ -150,8 +158,8 @@ const Details = () => {
               </h5>
             </div>
 
-            {campaignTransactions.length > 0 &&
-              campaignTransactions.slice(0, 5).map((transaction) => (
+            {transactions?.length > 0 &&
+              transactions?.slice(0, 5).map((transaction) => (
                 <div
                   key={transaction.reference}
                   className="d-flex justify-content-between align-items-center my-3 "

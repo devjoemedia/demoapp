@@ -5,17 +5,14 @@ import {
 } from "firebase/auth";
 import {
   doc,
-  getDocs,
   setDoc,
   collection,
-  query,
-  where,
+  getDoc,
+  onSnapshot,
 } from "firebase/firestore";
-import { auth, firestore, storage } from "../firebase/config";
-import { ref, uploadBytes } from "firebase/storage";
-import { firebaseConnect } from "react-redux-firebase";
-import axios from "axios";
+import { auth, firestore } from "../firebase/config";
 
+// Action: set auth state in redux store
 export const setAuthenticated = (authenticated) => {
   return {
     type: "SET_AUTHENTICATED",
@@ -23,6 +20,7 @@ export const setAuthenticated = (authenticated) => {
   };
 };
 
+// Action: set user to redux store
 export const setUser = (user) => {
   return {
     type: "SET_USER",
@@ -30,6 +28,7 @@ export const setUser = (user) => {
   };
 };
 
+// Action: set transactions to redux store
 export const setTransactions = (transactions) => {
   return {
     type: "SET_TRANSACTIONS",
@@ -37,6 +36,7 @@ export const setTransactions = (transactions) => {
   };
 };
 
+// register user useing firebase authentication
 export const registerUser = async (email, password, userInfo) => {
   try {
     const userCredentials = await createUserWithEmailAndPassword(
@@ -46,14 +46,17 @@ export const registerUser = async (email, password, userInfo) => {
     );
 
     const uid = userCredentials.user.uid;
-    await saveUserDetails(userInfo, uid);
+    await saveUserDetails({ ...userInfo, email }, uid);
 
-    return userCredentials.user;
+    const data = { uid, email, ...userInfo };
+
+    return data;
   } catch (error) {
     throw error;
   }
 };
 
+// signin user using firebase authentication
 export const login = async (email, password) => {
   try {
     const userCredentials = await signInWithEmailAndPassword(
@@ -64,12 +67,24 @@ export const login = async (email, password) => {
 
     const user = userCredentials.user;
 
-    return user;
+    const docRef = doc(firestore, "users", user.uid);
+    const docSnap = await getDoc(docRef);
+
+    const userData = { ...docSnap.data(), email, uid: user.uid };
+
+    if (docSnap.exists()) {
+      return userData;
+    }
+
+    console.log(docSnap.data());
+
+    return userData;
   } catch (error) {
     throw error;
   }
 };
 
+// logout
 export const logout = async () => {
   try {
     await signOut(auth);
@@ -78,61 +93,39 @@ export const logout = async () => {
   }
 };
 
+// save user registration data to firebase
 export const saveUserDetails = async (userInfo, uid) => {
   try {
-    await setDoc(doc(firestore, "users", uid), userInfo);
+    const userRef = collection(firestore, "users");
+
+    await setDoc(doc(userRef, uid), userInfo);
   } catch (error) {
     console.log(error);
   }
 };
 
-export const saveTransaction = async (data) => {
+// Saving Transaction  to Firebase
+export const saveTransactionToFirebase = async (data) => {
   try {
-    await setDoc(doc(firestore, "transactions", data.reference), data);
+    const transactionsRef = collection(firestore, "transactions");
+
+    await setDoc(doc(transactionsRef, data.reference), data);
   } catch (err) {
     console.log(err);
   }
 };
 
-export const getCampaignTransactions = async (campaignId) => {
-  const q = query(
-    collection(firestore, "transactions"),
-    where("campaignId", "==", campaignId)
-  );
+// Retreiving All Transactions form Firebase
+export const getTransactionsFromFirebase = async () => {
+  const transactionsRef = collection(firestore, "transactions");
 
-  const querySnapshot = await getDocs(q);
+  let transactions = [];
 
-  querySnapshot.forEach((doc) => {
-    // doc.data() is never undefined for query doc snapshots
-    console.log(doc.id, " => ", doc.data());
-  });
-};
-
-export const getTransactions = async () => {
-  try {
-    let { data } = await axios.get("https://api.paystack.co/transaction", {
-      headers: {
-        Authorization: "Bearer " + process.env.REACT_APP_PAYSTACK_SECRET_KEY,
-      },
+  const unsubscribe = onSnapshot(transactionsRef, (querySnapshot) => {
+    querySnapshot.forEach((doc) => {
+      transactions.push(doc.data());
     });
-    // .then((response) => {
-    //   let data = response.data.data.map((item) => {
-    //     return {
-    //       amount: item.amount,
-    //       createdAt: item.createdAt,
-    //       currency: item.currency,
-    //       id: item.id,
-    //       email: item.customer.email,
-    //       reference: item.reference,
-    //       ...item.metadata,
-    //     };
-    //   });
+  });
 
-    //   return data;
-    // })
-    // .catch((err) => console.log(err));
-    return data;
-  } catch (err) {
-    console.log(err);
-  }
+  return transactions;
 };
