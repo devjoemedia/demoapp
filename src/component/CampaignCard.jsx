@@ -4,8 +4,11 @@ import { Link } from "react-router-dom";
 import Help from "../images/help.jpeg";
 import ProgressBar from "@ramonak/react-progress-bar";
 import { motion } from "framer-motion";
+import moment from "moment";
 
-function CampaignCard({ image, alt, children, url }) {
+function CampaignCard(props) {
+  const campaign = props.campaign;
+
   return (
     <Col sm={12} md={6} lg={4} className="my-2">
       <motion.div
@@ -30,9 +33,17 @@ function CampaignCard({ image, alt, children, url }) {
             <Card.Body>
               <Row>
                 <Col lg="12" className="mb-2">
-                  <h4>Kidney Transplant</h4>
+                  <h4>{campaign.title}</h4>
+                    <div className="d-flex justify-content-between">
+                      <Card.Text style={{ fontFamily: "Poppins" }}>
+                        {campaign.category}
+                      </Card.Text>
+                      <Card.Text style={{ fontFamily: "Poppins" }}>
+                        {moment(campaign.date).format('MMMM,Do-YY')}
+                      </Card.Text>
+                    </div>
                   <Card.Text style={{ fontFamily: "Poppins" }}>
-                    Some quick example text to build on the card
+                    {campaign.description}
                   </Card.Text>
 
                   <ProgressBar

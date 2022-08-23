@@ -1,19 +1,30 @@
+import { useState } from "react";
 import { Col, Container, Form, Pagination, Row } from "react-bootstrap";
 import CampaignCard from "../component/CampaignCard";
+import { useSelector } from "react-redux";
 
-const AllCampaigns = () => {
+const AllCampaigns = (props) => {
+  const campaigns = useSelector((state) => state.campaigns);
+  
+
+  const [search, setSearch] = useState("");
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+  };
+
   return (
     <div>
       <Container className="py-5">
         <Col xs={12} sm={6}>
-          <Form.Group className="mb-3" controlId="formBasicEmail">
+          <Form.Group onSubmit={handleSearch} className="mb-3" controlId="formBasicEmail">
             <Form.Label>Search</Form.Label>
             <Form.Control
               size="lg"
               type="text"
               placeholder="Enter Search term"
-              value=""
-              // onChange={(e) => setEmail(e.target.value)}
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
               style={{ fontSize: "18px" }}
             />
           </Form.Group>
@@ -29,15 +40,11 @@ const AllCampaigns = () => {
           Campaigns
         </h1>
         <Row className="py-2">
-          <CampaignCard />
-          <CampaignCard />
-          <CampaignCard />
-          <CampaignCard />
-          <CampaignCard />
-          <CampaignCard />
-          <CampaignCard />
-          <CampaignCard />
-          <CampaignCard />
+        {campaigns.map((campaign, index) => {
+          return (
+            <CampaignCard key={campaign.id} campaign={campaign} index={index}/>
+          );
+        })}
         </Row>
         <Pagination>
           <Pagination.First />

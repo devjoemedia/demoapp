@@ -13,7 +13,7 @@ import useGetCampaignTransactions from "../hooks/useGetCampaignTransactions";
 import NumberFormat from "react-number-format";
 
 const Details = () => {
-  const [fullName, setFullName] = useState("Annanymouse");
+  const [fullName, setFullName] = useState("Annonymos");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [amount, setAmount] = useState("");

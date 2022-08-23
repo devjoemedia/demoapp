@@ -8,7 +8,7 @@ import {
   setDoc,
   collection,
   getDoc,
-  onSnapshot,
+  onSnapshot
 } from "firebase/firestore";
 import { auth, firestore } from "../firebase/config";
 
@@ -36,7 +36,15 @@ export const setTransactions = (transactions) => {
   };
 };
 
-// register user useing firebase authentication
+// Action: set campaigns to redux store
+export const setCampaigns = (campaigns) => {
+  return {
+    type: "SET_CAMPAIGNS",
+    payload: campaigns,
+  };
+};
+
+// register user using firebase authentication
 export const registerUser = async (email, password, userInfo) => {
   try {
     const userCredentials = await createUserWithEmailAndPassword(
@@ -115,7 +123,7 @@ export const saveTransactionToFirebase = async (data) => {
   }
 };
 
-// Retreiving All Transactions form Firebase
+// Retreiving All Transactions from Firebase
 export const getTransactionsFromFirebase = async () => {
   const transactionsRef = collection(firestore, "transactions");
 
@@ -129,3 +137,25 @@ export const getTransactionsFromFirebase = async () => {
 
   return transactions;
 };
+
+
+// Adding a campaign
+export const addCampaign = async (newCampaign) => {
+  try {
+    await setDoc(doc(firestore, "campaigns", newCampaign.id ), newCampaign);
+
+  } catch (err) {
+    console.log(err);
+  }
+
+};
+
+//Editing a campaign
+export const editCampaign = (id, campaignData) => {
+  try {
+    
+  } catch (err) {
+    console.log(err);
+  }
+};
+

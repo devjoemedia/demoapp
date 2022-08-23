@@ -2,6 +2,7 @@ const initialState = {
   user: null,
   authenticated: false,
   transactions: [],
+  campaigns: [],
 };
 
 export const rootReducer = (state = initialState, action) => {
@@ -14,6 +15,10 @@ export const rootReducer = (state = initialState, action) => {
 
     case "SET_TRANSACTIONS":
       return { ...state, transactions: action.payload };
+
+    case "SET_CAMPAIGNS":
+      return {...state, campaigns: action.payload };
+
     default:
       return state;
   }

@@ -1,13 +1,20 @@
+import { useEffect, useState } from "react";
 import { Button, Row, Col, Card, Container, Pagination } from "react-bootstrap";
 import { Link, Navigate } from "react-router-dom";
 import Help from "../images/help.jpeg";
 import { motion } from "framer-motion";
 import ProgressBar from "@ramonak/react-progress-bar";
 import { useSelector } from "react-redux";
+import moment from "moment";
 
-const MyCampaigns = () => {
+const MyCampaigns = (props) => {
   const data = [1, 2, 3];
   const user = useSelector((state) => state.user);
+  const campaign = props.campaign;
+
+  // useEffect(() => {
+
+  // }, []);
 
   return (
     <Container style={{ padding: "20px 0" }}>
@@ -47,10 +54,18 @@ const MyCampaigns = () => {
                             style={{ textDecoration: "none" }}
                             className="text-dark"
                           >
-                            <h4>Kidney Transplant</h4>
+                            <h4>{campaign.title}</h4>
                           </Link>
+                          <div className="d-flex justify-content-between">
+                            <Card.Text style={{ fontFamily: "Poppins" }}>
+                              {campaign.category}
+                            </Card.Text>
+                            <Card.Text style={{ fontFamily: "Poppins" }}>
+                            {moment(campaign.date).format('MMMM,Do-YY')}
+                            </Card.Text>
+                          </div>
                           <Card.Text style={{ fontFamily: "Poppins" }}>
-                            Some quick example text to build on the card
+                            {campaign.description}
                           </Card.Text>
 
                           <ProgressBar
@@ -64,7 +79,7 @@ const MyCampaigns = () => {
                           <Row className="mb-0 mt-2">
                             <Col className="mb-1">
                               <p className="m-0">
-                                Target:
+                                {campaign.amount}
                                 <span className="text-muted"> $50,000</span>
                               </p>
                             </Col>
