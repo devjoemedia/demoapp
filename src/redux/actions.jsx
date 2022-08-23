@@ -9,8 +9,6 @@ import {
   collection,
   getDoc,
   onSnapshot,
-  where,
-  query,
 } from "firebase/firestore";
 import { auth, firestore } from "../firebase/config";
 

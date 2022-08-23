@@ -1,25 +1,14 @@
-import { Button, Row, Col, Card, Container, Pagination } from "react-bootstrap";
-import { Link, Navigate } from "react-router-dom";
-import Help from "../images/help.jpeg";
-import { motion } from "framer-motion";
-import ProgressBar from "@ramonak/react-progress-bar";
+import { Row, Container, Pagination } from "react-bootstrap";
+import { Navigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import moment from "moment";
-import NumberFormat from "react-number-format";
-import useGetCampaignTransactions from "../hooks/useGetCampaignTransactions";
 import useGetMyCampaigns from "../hooks/useGetMyCampaigns";
 import MyCampaignCard from "../component/MyCampaignCard";
 
 const MyCampaigns = () => {
-  const data = [1, 2, 3];
   const user = useSelector((state) => state.user);
 
   let userId = user.uid;
   const { campaigns } = useGetMyCampaigns(userId);
-
-  // const { totalDonations } = useGetCampaignTransactions(campaign.id);
-
-  const percentageDonated = ((300 / 1000) * 100).toFixed(2);
 
   return (
     <Container style={{ padding: "20px 0" }}>
