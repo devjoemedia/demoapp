@@ -1,9 +1,16 @@
 import React, { useState } from "react";
-import { Button, Container, Form, Image, Alert, Spinner } from "react-bootstrap";
+import {
+  Button,
+  Container,
+  Form,
+  Image,
+  Alert,
+  Spinner,
+} from "react-bootstrap";
 import Help from "../images/help.jpeg";
 import { Navigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import {v4 as uuid } from "uuid";
+import { v4 as uuid } from "uuid";
 import { addCampaign } from "../redux/actions";
 
 const Create = () => {
@@ -26,6 +33,7 @@ const Create = () => {
   ];
   const [category, setCategory] = useState("");
   const [imageUrl, setImageUrl] = useState(null);
+
   const user = useSelector((state) => state.user);
 
   const [title, setTitle] = useState("");
@@ -62,10 +70,10 @@ const Create = () => {
     }, 2000);
   };
 
-  const handlePublish = (e) => {
+  const handlePublish = async (e) => {
     e.preventDefault();
 
-    if(!title || !category || !amount || !description) {
+    if (!title || !category || !amount || !description) {
       showError();
     } else {
       startLoading();
@@ -73,17 +81,17 @@ const Create = () => {
       let newCampaign = {
         id: uuid(),
         userId: user.uid,
+        creatorName: user.fullName,
         date: Date.now(),
         title: title,
         category: category,
-        amount: amount,
+        amount: amount * 1,
         description: description,
       };
 
+      await addCampaign(newCampaign);
+
       showSuccess();
-
-      dispatch(addCampaign(newCampaign));
-
       setTitle("");
       setCategory("");
       setAmount("");
@@ -134,7 +142,12 @@ const Create = () => {
             </Form.Group>
             <Form.Group className="mb-3">
               <Form.Label className="fw-bold">Title</Form.Label>
-              <Form.Control type="text" placeholder="Feeding in Ukraine..." value={title} onChange={(e) => setTitle(e.target.value)}/>
+              <Form.Control
+                type="text"
+                placeholder="Feeding in Ukraine..."
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+              />
             </Form.Group>
             <Form.Group className="mb-3">
               <Form.Label className="fw-bold">Category</Form.Label>
@@ -169,14 +182,34 @@ const Create = () => {
             </Form.Group>
             <Form.Group className="mb-3">
               <Form.Label className="fw-bold">Bill Amount</Form.Label>
-              <Form.Control type="number" placeholder="$55,000" value={amount} onChange={(e) => setAmount(e.target.value)} />
+              <Form.Control
+                type="number"
+                placeholder="$55,000"
+                value={amount}
+                onChange={(e) => setAmount(e.target.value)}
+              />
             </Form.Group>
             <Form.Group className="mb-3">
               <Form.Label className="fw-bold">Description</Form.Label>
-              <Form.Control as="textarea" rows={7} placeholder="Summarize your story" value={description} onChange={(e) => setDescription(e.target.value)} />
+              <Form.Control
+                as="textarea"
+                rows={7}
+                placeholder="Summarize your story"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+              />
             </Form.Group>
-            {error && (<Alert variant="danger" className="text-center mt-1 mb-3">Leave no field empty / select a category </Alert>)}
-            {success && (<Alert variant="success" className="text-center mt-1 mb-3"> Campaign successfully created </Alert>)}
+            {error && (
+              <Alert variant="danger" className="text-center mt-1 mb-3">
+                Leave no field empty / select a category{" "}
+              </Alert>
+            )}
+            {success && (
+              <Alert variant="success" className="text-center mt-1 mb-3">
+                {" "}
+                Campaign successfully created{" "}
+              </Alert>
+            )}
             <Form.Group className="mb-3">
               <Button
                 disabled={loading}
@@ -191,21 +224,21 @@ const Create = () => {
                   border: "1px solid #004c46",
                 }}
               >
-              {loading ? (
-                <i>
-                  <Spinner
-                    as="span"
-                    animation="border"
-                    variant="secondary"
-                    size="sm"
-                    role="status"
-                    aria-hidden="true"
-                  />{" "}
-                  Please wait..
-                </i>
-              ) : (
-                "Publish"
-              )}
+                {loading ? (
+                  <i>
+                    <Spinner
+                      as="span"
+                      animation="border"
+                      variant="secondary"
+                      size="sm"
+                      role="status"
+                      aria-hidden="true"
+                    />{" "}
+                    Please wait..
+                  </i>
+                ) : (
+                  "Publish"
+                )}
               </Button>
             </Form.Group>
           </Form>

@@ -11,6 +11,8 @@ import millify from "millify";
 import { saveTransactionToFirebase } from "../redux/actions";
 import useGetCampaignTransactions from "../hooks/useGetCampaignTransactions";
 import NumberFormat from "react-number-format";
+import useGetCampaign from "../hooks/useGetCampaign";
+import { useSelector } from "react-redux";
 
 const Details = () => {
   const [fullName, setFullName] = useState("Annonymos");
@@ -20,9 +22,14 @@ const Details = () => {
   const [message, setMessage] = useState("");
   const [show, setShow] = useState(false);
 
+  const user = useSelector((state) => state.user);
+
   const { id } = useParams("id");
 
   const { transactions, totalDonations } = useGetCampaignTransactions(id);
+
+  let campaignId = id;
+  const { campaign } = useGetCampaign(campaignId);
 
   const config = {
     reference: new Date().getTime().toString(),
@@ -75,8 +82,9 @@ const Details = () => {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  let billAmount = 50000;
-  const percentageDonated = ((totalDonations / billAmount) * 100).toFixed(2);
+  const percentageDonated = ((totalDonations / campaign?.amount) * 100).toFixed(
+    2
+  );
 
   return (
     <>
@@ -95,7 +103,14 @@ const Details = () => {
               <Col className="mb-1">
                 <p className="m-0">
                   Target:
-                  <span className="text-muted"> $50,000</span>
+                  <span className="text-muted">
+                    <NumberFormat
+                      value={campaign?.amount}
+                      displayType={"text"}
+                      thousandSeparator={true}
+                      prefix={"$"}
+                    />
+                  </span>
                 </p>
               </Col>
               <Col style={{ justifyContent: "end", display: "flex" }}>
@@ -107,49 +122,69 @@ const Details = () => {
                     prefix={"$"}
                   />
                 </span>
-                <p> ({percentageDonated}%)</p>
+                <p> ({percentageDonated | 0}%)</p>
               </Col>
             </Row>
             <ProgressBar
-              completed={50}
+              completed={percentageDonated}
               maxCompleted={100}
               height="7px"
               isLabelVisible={false}
               bgColor="#004c46"
             />
 
-            <div className=" mt-3">
-              <Button
-                style={{
-                  backgroundColor: "#004c46",
-                  color: "#fff",
-                  width: "100%",
-                  outline: "none",
-                  padding: ".8rem 1rem",
-                  border: "none",
-                  margin: "10px 0",
-                }}
-                className="d-block"
-                onClick={handleShow}
-              >
-                Donate Now
-              </Button>
-              <Button
-                style={{
-                  backgroundColor: "#fff",
-                  color: "#004c46",
-                  width: "100%",
-                  outline: "none",
-                  padding: ".8rem 1rem",
-                  border: "1px solid #004c46",
-                  margin: "10px 0",
-                }}
-                className="d-block"
-                onClick={handleShow}
-              >
-                Flag Campaign as Fraud
-              </Button>
-            </div>
+            {campaign?.userId === user?.uid ? (
+              <div className=" mt-3">
+                <Button
+                  style={{
+                    backgroundColor: "#004c46",
+                    color: "#fff",
+                    width: "100%",
+                    outline: "none",
+                    padding: ".8rem 1rem",
+                    border: "none",
+                    margin: "10px 0",
+                  }}
+                  className="d-block"
+                  onClick={handleShow}
+                >
+                  Withdraw Funds
+                </Button>
+              </div>
+            ) : (
+              <div className=" mt-3">
+                <Button
+                  style={{
+                    backgroundColor: "#004c46",
+                    color: "#fff",
+                    width: "100%",
+                    outline: "none",
+                    padding: ".8rem 1rem",
+                    border: "none",
+                    margin: "10px 0",
+                  }}
+                  className="d-block"
+                  onClick={handleShow}
+                >
+                  Donate Now
+                </Button>
+                <Button
+                  style={{
+                    backgroundColor: "#fff",
+                    color: "#004c46",
+                    width: "100%",
+                    outline: "none",
+                    padding: ".8rem 1rem",
+                    border: "1px solid #004c46",
+                    margin: "10px 0",
+                  }}
+                  className="d-block"
+                  onClick={handleShow}
+                >
+                  Flag Campaign as Fraud
+                </Button>
+              </div>
+            )}
 
             <div className="d-flex align-items-center justify-content-between  my-3 mt-4">
               <h5 style={{ fontSize: "14px" }}>Last 5 donations</h5>
@@ -188,7 +223,14 @@ const Details = () => {
                     </div>
                   </div>
 
-                  <p>${(transaction.amount / 100).toFixed(2)}</p>
+                  <p>
+                    <NumberFormat
+                      value={(transaction.amount / 100).toFixed(2)}
+                      displayType={"text"}
+                      thousandSeparator={true}
+                      prefix={"$"}
+                    />
+                  </p>
                 </div>
               ))}
 
@@ -246,56 +288,80 @@ const Details = () => {
                   <FaRegUser size={22} />
                 </div>
                 <div>
-                  <p className="m-0 text-dark">Jane Doe</p>
+                  <p className="m-0 text-dark">{campaign?.creatorName}</p>
                 </div>
               </div>
 
               <div>
-                <p className="m-0">created on may 24th, 2015</p>
                 <p className="m-0">
-                  <BsFillTagFill /> Family
+                  created on {moment(campaign?.date).format("MMMM D,YYYY")}
+                </p>
+                <p className="m-0">
+                  <BsFillTagFill /> {campaign?.category}
                 </p>
               </div>
             </div>
-            <p className="py-3">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Amet
-              sapiente a, exercitationem incidunt voluptatum molestiae obcaecati
-              perferendis. Quidem voluptatum facere explicabo nostrum? A ipsam
-              nisi dolorum delectus consequatur rerum numquam. Nam eum illum
-              provident quod omnis eos totam ipsa at tempore! Reiciendis
-              cupiditate debitis nam adipisci soluta a quas optio, quasi
-              quisquam, in qui perferendis praesentium odio alias dignissimos
-              nihil?
-            </p>
+            <p className="py-3">{campaign?.description}</p>
 
-            <div className="d-flex justify-content-between">
-              <Button
-                style={{
-                  backgroundColor: "#004c46",
-                  color: "#fff",
-                  width: "45%",
-                  outline: "none",
-                  padding: ".8rem 1rem",
-                  border: "none",
-                }}
-                onClick={handleShow}
-              >
-                Donate Now
-              </Button>
-              <Button
-                style={{
-                  backgroundColor: "#fff",
-                  color: "#004c46",
-                  width: "45%",
-                  outline: "none",
-                  padding: ".8rem 1rem",
-                  border: "1px solid #004c46",
-                  marginLeft: "10px",
-                }}
-              >
-                Share
-              </Button>
-            </div>
+            {campaign?.userId === user?.uid ? (
+              <div className="d-flex justify-content-between">
+                <Button
+                  style={{
+                    backgroundColor: "#004c46",
+                    color: "#fff",
+                    width: "45%",
+                    outline: "none",
+                    padding: ".8rem 1rem",
+                    border: "none",
+                  }}
+                  onClick={handleShow}
+                >
+                  Withdraw Funds
+                </Button>
+                <Button
+                  style={{
+                    backgroundColor: "#fff",
+                    color: "#004c46",
+                    width: "45%",
+                    outline: "none",
+                    padding: ".8rem 1rem",
+                    border: "1px solid #004c46",
+                    marginLeft: "10px",
+                  }}
+                >
+                  Share
+                </Button>
+              </div>
+            ) : (
+              <div className="d-flex justify-content-between">
+                <Button
+                  style={{
+                    backgroundColor: "#004c46",
+                    color: "#fff",
+                    width: "45%",
+                    outline: "none",
+                    padding: ".8rem 1rem",
+                    border: "none",
+                  }}
+                  onClick={handleShow}
+                >
+                  Donate Now
+                </Button>
+                <Button
+                  style={{
+                    backgroundColor: "#fff",
+                    color: "#004c46",
+                    width: "45%",
+                    outline: "none",
+                    padding: ".8rem 1rem",
+                    border: "1px solid #004c46",
+                    marginLeft: "10px",
+                  }}
+                >
+                  Share
+                </Button>
+              </div>
+            )}
           </Col>
         </Row>
 
@@ -305,7 +371,7 @@ const Details = () => {
             <Modal.Title>make donation</Modal.Title>
           </Modal.Header>
           <div className="mx-3">
-            <small>please email is required*</small>
+            <small>please email & amount are required*</small>
           </div>
           <Modal.Body>
             <Form>

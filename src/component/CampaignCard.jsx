@@ -5,9 +5,15 @@ import Help from "../images/help.jpeg";
 import ProgressBar from "@ramonak/react-progress-bar";
 import { motion } from "framer-motion";
 import moment from "moment";
+import NumberFormat from "react-number-format";
+import useGetCampaignTransactions from "../hooks/useGetCampaignTransactions";
 
-function CampaignCard(props) {
-  const campaign = props.campaign;
+function CampaignCard({ campaign }) {
+  const { totalDonations } = useGetCampaignTransactions(campaign.id);
+
+  const percentageDonated = ((totalDonations / campaign.amount) * 100).toFixed(
+    2
+  );
 
   return (
     <Col sm={12} md={6} lg={4} className="my-2">
@@ -18,7 +24,7 @@ function CampaignCard(props) {
         viewport={{ once: false }}
       >
         <Link
-          to="/campaigns/123"
+          to={"/campaigns/" + campaign.id}
           style={{ textDecoration: "none" }}
           className="text-dark"
         >
@@ -33,21 +39,27 @@ function CampaignCard(props) {
             <Card.Body>
               <Row>
                 <Col lg="12" className="mb-2">
-                  <h4>{campaign.title}</h4>
-                    <div className="d-flex justify-content-between">
-                      <Card.Text style={{ fontFamily: "Poppins" }}>
-                        {campaign.category}
-                      </Card.Text>
-                      <Card.Text style={{ fontFamily: "Poppins" }}>
-                        {moment(campaign.date).format('MMMM,Do-YY')}
-                      </Card.Text>
-                    </div>
+                  <h4>
+                    {campaign?.title.length < 20
+                      ? campaign.title
+                      : campaign?.title.substr(0, 20) + "..."}
+                  </h4>
+                  <div className="d-flex justify-content-between">
+                    <Card.Text style={{ fontFamily: "Poppins" }}>
+                      {campaign.category}
+                    </Card.Text>
+                    <Card.Text style={{ fontFamily: "Poppins" }}>
+                      {moment(campaign.date).format("MMM D,YYYY")}
+                    </Card.Text>
+                  </div>
                   <Card.Text style={{ fontFamily: "Poppins" }}>
-                    {campaign.description}
+                    {campaign?.description.length < 50
+                      ? campaign.description
+                      : campaign?.description.substr(0, 50) + "..."}
                   </Card.Text>
 
                   <ProgressBar
-                    completed={50}
+                    completed={percentageDonated}
                     maxCompleted={100}
                     height="7px"
                     isLabelVisible={false}
@@ -58,12 +70,26 @@ function CampaignCard(props) {
                     <Col className="mb-1">
                       <p className="m-0">
                         Target:
-                        <span className="text-muted"> $50,000</span>
+                        <span className="text-muted">
+                          <NumberFormat
+                            value={campaign.amount}
+                            displayType={"text"}
+                            thousandSeparator={true}
+                            prefix={"$"}
+                          />
+                        </span>
                       </p>
                     </Col>
                     <Col style={{ justifyContent: "end", display: "flex" }}>
-                      <span className="text-muted">$42,000</span>
-                      <p>(82%)</p>
+                      <span className="text-muted">
+                        <NumberFormat
+                          value={totalDonations}
+                          displayType={"text"}
+                          thousandSeparator={true}
+                          prefix={"$"}
+                        />
+                      </span>
+                      <p> ({percentageDonated}%)</p>
                     </Col>
                   </Row>
                 </Col>

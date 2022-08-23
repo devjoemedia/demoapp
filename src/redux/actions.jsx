@@ -8,7 +8,9 @@ import {
   setDoc,
   collection,
   getDoc,
-  onSnapshot
+  onSnapshot,
+  where,
+  query,
 } from "firebase/firestore";
 import { auth, firestore } from "../firebase/config";
 
@@ -84,8 +86,6 @@ export const login = async (email, password) => {
       return userData;
     }
 
-    console.log(docSnap.data());
-
     return userData;
   } catch (error) {
     throw error;
@@ -138,24 +138,19 @@ export const getTransactionsFromFirebase = async () => {
   return transactions;
 };
 
-
 // Adding a campaign
 export const addCampaign = async (newCampaign) => {
   try {
-    await setDoc(doc(firestore, "campaigns", newCampaign.id ), newCampaign);
-
+    await setDoc(doc(firestore, "campaigns", newCampaign.id), newCampaign);
   } catch (err) {
     console.log(err);
   }
-
 };
 
 //Editing a campaign
 export const editCampaign = (id, campaignData) => {
   try {
-    
   } catch (err) {
     console.log(err);
   }
 };
-
