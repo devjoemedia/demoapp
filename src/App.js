@@ -10,13 +10,11 @@ function App() {
   const dispatch = useDispatch();
 
   const [transactions] = useGetTransactions();
-  const { campaigns } = useGetCampaign();
 
-  // useEffect(() => {}, [third]);
 
   useEffect(() => {
     dispatch(setTransactions(transactions));
-  }, [transactions, campaigns, dispatch]);
+  }, [transactions, dispatch]);
 
   return <MainRouter />;
   // return <Router />;
