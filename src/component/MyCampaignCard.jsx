@@ -50,14 +50,7 @@ const MyCampaignCard = ({ campaign }) => {
                       : campaign?.title.substr(0, 20) + "..."}
                   </h4>
                 </Link>
-                <div className="d-flex justify-content-between">
-                  <Card.Text style={{ fontFamily: "Poppins" }}>
-                    {campaign?.category}
-                  </Card.Text>
-                  <Card.Text style={{ fontFamily: "Poppins" }}>
-                    {moment(campaign?.date).format("MMMM D,YYYY")}
-                  </Card.Text>
-                </div>
+
                 <Card.Text style={{ fontFamily: "Poppins" }}>
                   {campaign?.description.length < 50
                     ? campaign.description
