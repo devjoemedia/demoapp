@@ -1,6 +1,6 @@
 import React from "react";
 import { Container, Navbar, Nav, Button } from "react-bootstrap";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FaRegUser, FaSeedling, FaSignOutAlt } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { logout, setUser } from "../redux/actions";
@@ -10,10 +10,12 @@ export default function Header() {
 
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleLogout = async () => {
     await logout();
     dispatch(setUser(null));
+    navigate("/", { replace: true });
   };
 
   return (
