@@ -1,10 +1,8 @@
 import React from "react";
 import { Button, Row, Col, Card } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import Help from "../images/help.jpeg";
 import ProgressBar from "@ramonak/react-progress-bar";
 import { motion } from "framer-motion";
-import moment from "moment";
 import NumberFormat from "react-number-format";
 import useGetCampaignTransactions from "../hooks/useGetCampaignTransactions";
 
@@ -35,7 +33,11 @@ function CampaignCard({ campaign }) {
               background: "#fff",
             }}
           >
-            <Card.Img variant="top" src={Help} />
+            <Card.Img
+              variant="top"
+              src={campaign?.image}
+              style={{ height: 200 }}
+            />
             <Card.Body>
               <Row>
                 <Col lg="12" className="mb-2">

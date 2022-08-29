@@ -1,5 +1,4 @@
 import { Button, Col, Container, Form, Modal, Row } from "react-bootstrap";
-import Help from "../images/help.jpeg";
 import { BsFillTagFill } from "react-icons/bs";
 import ProgressBar from "@ramonak/react-progress-bar";
 import { useState } from "react";
@@ -8,11 +7,14 @@ import { usePaystackPayment } from "react-paystack";
 import { useParams } from "react-router-dom";
 import moment from "moment";
 import millify from "millify";
-import { saveTransactionToFirebase } from "../redux/actions";
+import { saveTransactionToFirebase, setUser } from "../redux/actions";
 import useGetCampaignTransactions from "../hooks/useGetCampaignTransactions";
 import NumberFormat from "react-number-format";
 import useGetCampaign from "../hooks/useGetCampaign";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import axios from "axios";
+import { doc, onSnapshot, setDoc, updateDoc } from "firebase/firestore";
+import { firestore } from "../firebase/config";
 
 const Details = () => {
   const [fullName, setFullName] = useState("Annonymos");
@@ -21,6 +23,7 @@ const Details = () => {
   const [amount, setAmount] = useState("");
   const [message, setMessage] = useState("");
   const [show, setShow] = useState(false);
+  const dispatch = useDispatch();
 
   const user = useSelector((state) => state.user);
 
@@ -79,6 +82,89 @@ const Details = () => {
     initializePayment(onSuccess, onClose);
   };
 
+  const handleWithrawal = async () => {
+    // create transfer recipient
+    // let recipientCode = null;
+
+    // if (!user.recipientCode) {
+    //   let { data } = await axios.post(
+    //     "https://api.paystack.co/transferrecipient",
+    //     {
+    //       type: "mobile_money",
+    //       name: "Abina Nana",
+    //       account_number: "0551234987", //user.phone
+    //       bank_code: "MTN",
+    //       currency: "GHS",
+    //     },
+    //     {
+    //       headers: {
+    //         Authorization:
+    //           "Bearer " + process.env.REACT_APP_PAYSTACK_SECRET_KEY,
+    //         "Content-Type": "application/json",
+    //       },
+    //     }
+    //   );
+
+    //   recipientCode = data.data.recipient_code;
+
+    //   if (!recipientCode) return console.log("no recipient code");
+
+    //   const userRef = doc(firestore, "users", user.uid);
+
+    //   let userId = user.uid;
+
+    //   await updateDoc(userRef, {
+    //     recipientCode,
+    //   });
+
+    //   const unsub = onSnapshot(doc(firestore, "users", user.uid), (doc) => {
+    //     dispatch(
+    //       setUser({
+    //         ...doc.data(),
+    //         uid: userId,
+    //       })
+    //     );
+    //   });
+    // }
+
+    // Test using Flutterwave
+    const details = {
+      account_bank: "MTN",
+      account_number: "233540539205",
+      amount: 100,
+      currency: "GHS",
+      beneficiary_name: "Joseph Nartey",
+      naration: "making withdrawal for campaign" + id,
+      reference: "121323_PMCKDU_1", //DU_1 is time to change status
+      meta: {
+        sender: "FundFair GH",
+        sender_country: "GH",
+        mobile_number: "233547558595",
+      },
+    };
+
+    // initiate transfer
+    try {
+      console.log("starting trans");
+      const url = "https://api.flutterwave.com/v3/transfers";
+      const res = await axios({
+        url,
+        method: "get",
+        details,
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "*",
+          Authorization: "Bearer " + process.env.REACT_APP_PAYSTACK_SECRET_KEY,
+        },
+      });
+      console.log("ending trans");
+
+      console.log({ res });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
@@ -101,7 +187,7 @@ const Details = () => {
           >
             <Row className="mb-0 mt-2">
               <Col className="mb-1">
-                <p className="m-0">
+                <p className="m-0" onClick={handleWithrawal}>
                   Target:
                   <span className="text-muted">
                     <NumberFormat
@@ -252,7 +338,7 @@ const Details = () => {
 
           <Col sm={12} md={7}>
             <img
-              src={Help}
+              src={campaign?.image}
               alt="banner"
               style={{ height: "350px", width: "100%", borderRadius: "10px" }}
             />

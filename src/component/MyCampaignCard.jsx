@@ -1,12 +1,11 @@
 import ProgressBar from "@ramonak/react-progress-bar";
-import moment from "moment";
 import { motion } from "framer-motion";
 import React from "react";
 import { Button, Card, Col, Row } from "react-bootstrap";
 import NumberFormat from "react-number-format";
 import { Link } from "react-router-dom";
 import useGetCampaignTransactions from "../hooks/useGetCampaignTransactions";
-import Help from "../images/help.jpeg";
+import axios from "axios";
 
 const MyCampaignCard = ({ campaign }) => {
   const { totalDonations } = useGetCampaignTransactions(campaign.id);
@@ -14,6 +13,45 @@ const MyCampaignCard = ({ campaign }) => {
   const percentageDonated = ((totalDonations / campaign.amount) * 100).toFixed(
     2
   );
+
+  const handleWithrawal = async (id) => {
+    // Test using Flutterwave
+    const details = {
+      account_bank: "MTN",
+      account_number: "233540539205",
+      amount: 100,
+      currency: "GHS",
+      beneficiary_name: "Joseph Nartey",
+      naration: "making withdrawal for campaign" + id,
+      reference: "121323_PMCKDU_1", //DU_1 is time to change status
+      meta: {
+        sender: "FundFair GH",
+        sender_country: "GH",
+        mobile_number: "233547558595",
+      },
+    };
+
+    // initiate transfer
+    try {
+      console.log("starting trans");
+      const url = "https://api.flutterwave.com/v3/transfers";
+      const res = await axios({
+        url,
+        method: "get",
+        details,
+        headers: {
+          Authorization: "Bearer " + process.env.REACT_APP_PAYSTACK_SECRET_KEY,
+          "Content-Type": "application/json",
+          Accept: "*",
+        },
+      });
+      console.log("ending trans");
+
+      console.log({ res });
+    } catch (err) {
+      console.log(err);
+    }
+  };
   return (
     <Col sm={12} md={6} lg={4} className="my-2" key={campaign?.id}>
       <motion.div
@@ -34,7 +72,11 @@ const MyCampaignCard = ({ campaign }) => {
             style={{ textDecoration: "none" }}
             className="text-dark"
           >
-            <Card.Img variant="top" src={Help} />
+            <Card.Img
+              variant="top"
+              src={campaign?.image}
+              style={{ height: 200 }}
+            />
           </Link>
           <Card.Body>
             <Row>
@@ -106,6 +148,7 @@ const MyCampaignCard = ({ campaign }) => {
                 border: "none",
                 width: "100%",
               }}
+              onClick={handleWithrawal}
             >
               Withdraw Funds
             </Button>

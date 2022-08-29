@@ -67,7 +67,15 @@ const AllCampaigns = () => {
             </Pagination>
           </Row>
         ) : (
-          <div>
+          <div
+            style={{
+              width: "100%",
+              minHeight: "50vh",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
             <h1>No Campaigns Found!</h1>
           </div>
         )}

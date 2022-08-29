@@ -7,11 +7,12 @@ import {
   Alert,
   Spinner,
 } from "react-bootstrap";
-import Help from "../images/help.jpeg";
 import { Navigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { v4 as uuid } from "uuid";
 import { addCampaign } from "../redux/actions";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { storage } from "../firebase/config";
 
 const Create = () => {
   const categories = [
@@ -33,6 +34,7 @@ const Create = () => {
   ];
   const [category, setCategory] = useState("");
   const [imageUrl, setImageUrl] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState(null);
 
   const user = useSelector((state) => state.user);
 
@@ -42,8 +44,6 @@ const Create = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [success, setSuccess] = useState(false);
-
-  const dispatch = useDispatch();
 
   const selectCategory = (category) => {
     setCategory(category);
@@ -75,11 +75,16 @@ const Create = () => {
 
     if (!title || !category || !amount || !description) {
       showError();
+      return;
     } else {
       startLoading();
 
+      let id = uuid();
+
+      let uploadLink = await uploadImage(id);
+
       let newCampaign = {
-        id: uuid(),
+        id,
         userId: user.uid,
         creatorName: user.fullName,
         date: Date.now(),
@@ -87,6 +92,9 @@ const Create = () => {
         category: category,
         amount: amount * 1,
         description: description,
+        image: uploadLink,
+        withdrawn: false,
+        recipientCode: null, //will be created through paystack
       };
 
       await addCampaign(newCampaign);
@@ -99,6 +107,22 @@ const Create = () => {
     }
   };
 
+  const uploadImage = async (id) => {
+    if (imageUrl == null) return;
+    let file = null;
+
+    let imageRef = ref(storage, `images/${id}.jpg`);
+    await uploadBytes(imageRef, imageUrl).then();
+
+    await getDownloadURL(imageRef)
+      .then((url) => {
+        file = url;
+      })
+      .catch((err) => console.log(err.message));
+    console.log({ file });
+    return file;
+  };
+
   return (
     <Container style={{ maxWidth: "600px", padding: "20px 0" }}>
       {!user ? (
@@ -109,9 +133,9 @@ const Create = () => {
           <h4>Create Campaign</h4>
           <Form>
             <Form.Group className="mb-3">
-              {imageUrl && (
+              {previewUrl && (
                 <Image
-                  src={Help}
+                  src={previewUrl}
                   alt="banner"
                   style={{
                     height: "300px",
@@ -136,9 +160,18 @@ const Create = () => {
                   cursor: "pointer",
                 }}
               >
-                {imageUrl ? "change file" : "upload file"}
+                {previewUrl ? "change file" : "upload file"}
               </Form.Label>
-              <Form.Control id="image" type="file" hidden />
+              <Form.Control
+                id="image"
+                type="file"
+                hidden
+                onChange={(e) => {
+                  setImageUrl(e.target.files[0]);
+                  setPreviewUrl(URL.createObjectURL(e.target.files[0]));
+                  console.log(imageUrl, e.target.files[0]);
+                }}
+              />
             </Form.Group>
             <Form.Group className="mb-3">
               <Form.Label className="fw-bold">Title</Form.Label>
