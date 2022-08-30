@@ -416,6 +416,9 @@ const Details = () => {
                 </p>
               </div>
             </div>
+
+            <h4 className="mt-3 fw-bold">{campaign?.title}</h4>
+
             <p className="py-3">{campaign?.description}</p>
 
             {campaign?.userId === user?.uid ? (

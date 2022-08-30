@@ -123,7 +123,6 @@ const Create = () => {
       {!user ? (
         <Navigate to="/login" replace={true} />
       ) : (
-        // <div style={{ maxWidth: "600px", margin: "auto", padding: "2rem 0" }}>
         <Container>
           <h4>Create Campaign</h4>
           <Form>
@@ -208,6 +207,19 @@ const Create = () => {
                 ))}
               </div>
             </Form.Group>
+
+            {/* {category === "Others" && (
+              <Form.Group className="mb-3">
+                <Form.Label className="fw-bold">Category</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Enter category"
+                  value={category}
+                  onChange={(e) => selectCategory(e.target.value)}
+                />
+              </Form.Group>
+            )} */}
+
             <Form.Group className="mb-3">
               <Form.Label className="fw-bold">Bill Amount</Form.Label>
               <Form.Control
@@ -229,13 +241,12 @@ const Create = () => {
             </Form.Group>
             {error && (
               <Alert variant="danger" className="text-center mt-1 mb-3">
-                Leave no field empty / select a category{" "}
+                Leave no field empty / select a category
               </Alert>
             )}
             {success && (
               <Alert variant="success" className="text-center mt-1 mb-3">
-                {" "}
-                Campaign successfully created{" "}
+                Campaign successfully created
               </Alert>
             )}
             <Form.Group className="mb-3">
