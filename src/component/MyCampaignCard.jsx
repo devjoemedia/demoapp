@@ -1,20 +1,47 @@
 import ProgressBar from "@ramonak/react-progress-bar";
 import { motion } from "framer-motion";
-import React from "react";
-import { Button, Card, Col, Row } from "react-bootstrap";
+import React, { useState } from "react";
+import { Button, Card, Col, Form, Modal, Row, Spinner } from "react-bootstrap";
 import NumberFormat from "react-number-format";
 import { Link } from "react-router-dom";
 import useGetCampaignTransactions from "../hooks/useGetCampaignTransactions";
 import axios from "axios";
+import Gift from "../images/giftbox.png";
 
 const MyCampaignCard = ({ campaign }) => {
+  const [message, setMessage] = useState(
+    "please confirm the destination account for your funds transfer! +23355545555"
+  );
+  const [btnMsg, setBtnMsg] = useState("Confirm");
+  const [processPayment, setProcessPayment] = useState(false);
+
+  const [withdrawn, setWithdrawn] = useState(false);
+  const [showForm, setShowForm] = useState(false);
+
   const { totalDonations } = useGetCampaignTransactions(campaign.id);
 
   const percentageDonated = ((totalDonations / campaign.amount) * 100).toFixed(
     2
   );
 
-  const handleWithrawal = async (id) => {
+  // show withdrawn
+  const closeWithdrawn = () => setWithdrawn(false);
+
+  const closeForm = () => {
+    setShowForm(false);
+    setMessage(
+      "please confirm the destination account for your funds transfer! +23355545555"
+    );
+    setBtnMsg("Confirm");
+  };
+  const openForm = () => setShowForm(true);
+
+  // handle Payment
+  const handleWithrawal = async () => {
+    setProcessPayment(true);
+    setMessage("proccessing your funds this may take a few minutes...");
+    setBtnMsg("Proccessing...");
+
     // Test using Flutterwave
     const details = {
       account_bank: "MTN",
@@ -22,7 +49,7 @@ const MyCampaignCard = ({ campaign }) => {
       amount: 100,
       currency: "GHS",
       beneficiary_name: "Joseph Nartey",
-      naration: "making withdrawal for campaign" + id,
+      naration: "making withdrawal for campaign" + campaign.id,
       reference: "121323_PMCKDU_1", //DU_1 is time to change status
       meta: {
         sender: "FundFair GH",
@@ -33,7 +60,6 @@ const MyCampaignCard = ({ campaign }) => {
 
     // initiate transfer
     try {
-      console.log("starting trans");
       const url = "https://api.flutterwave.com/v3/transfers";
       const res = await axios({
         url,
@@ -48,8 +74,14 @@ const MyCampaignCard = ({ campaign }) => {
       console.log("ending trans");
 
       console.log({ res });
+      setShowForm(false);
+      setWithdrawn(true);
+      setProcessPayment(false);
     } catch (err) {
       console.log(err);
+      setProcessPayment(false);
+      setMessage(err.message);
+      setBtnMsg("Retry");
     }
   };
   return (
@@ -148,13 +180,79 @@ const MyCampaignCard = ({ campaign }) => {
                 border: "none",
                 width: "100%",
               }}
-              onClick={handleWithrawal}
+              // onClick={handleWithrawal}
+              onClick={openForm}
             >
               Withdraw Funds
             </Button>
           </Card.Body>
         </Card>
       </motion.div>
+
+      {/* Withdrawal Form */}
+      <Modal show={showForm} onHide={closeForm}>
+        <Modal.Body className="text-center d-flex justify-content-between align-items-center flex-column">
+          {/* <h1>Please wait while we transfer your funds</h1> */}
+          <p>{message}</p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            variant="primary"
+            style={{
+              color: "#fff",
+              backgroundColor: "#004c46",
+              width: "200px",
+              outline: "none",
+              padding: ".6rem .8rem",
+              border: "1px solid #004c46",
+              marginLeft: "10px",
+            }}
+            disabled={processPayment}
+            onClick={handleWithrawal}
+          >
+            {processPayment ? (
+              <>
+                <Spinner
+                  as="span"
+                  animation="border"
+                  variant="secondary"
+                  size="sm"
+                  role="status"
+                  aria-hidden="true"
+                />{" "}
+                {btnMsg}
+              </>
+            ) : (
+              <>{btnMsg}</>
+            )}
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Successful Withdrawal */}
+      <Modal show={withdrawn} onHide={closeWithdrawn}>
+        <Modal.Body className="text-center d-flex justify-content-between align-items-center flex-column">
+          <img src={Gift} alt="thank you" className="img-fluid" />
+          <h2>Funds Transfered Successfully</h2>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            variant="primary"
+            style={{
+              color: "#fff",
+              backgroundColor: "#004c46",
+              width: "200px",
+              outline: "none",
+              padding: ".6rem .8rem",
+              border: "1px solid #004c46",
+              marginLeft: "10px",
+            }}
+            onClick={closeWithdrawn}
+          >
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </Col>
   );
 };

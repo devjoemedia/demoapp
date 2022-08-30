@@ -8,7 +8,7 @@ import {
   Spinner,
 } from "react-bootstrap";
 import { Navigate } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { v4 as uuid } from "uuid";
 import { addCampaign } from "../redux/actions";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
@@ -49,13 +49,6 @@ const Create = () => {
     setCategory(category);
   };
 
-  const startLoading = () => {
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-    }, 1000);
-  };
-
   const showError = () => {
     setError(true);
     setTimeout(() => {
@@ -77,7 +70,7 @@ const Create = () => {
       showError();
       return;
     } else {
-      startLoading();
+      setLoading(true);
 
       let id = uuid();
 
@@ -100,6 +93,8 @@ const Create = () => {
       await addCampaign(newCampaign);
 
       showSuccess();
+      setLoading(false);
+      setPreviewUrl(null);
       setTitle("");
       setCategory("");
       setAmount("");
@@ -258,7 +253,7 @@ const Create = () => {
                 }}
               >
                 {loading ? (
-                  <i>
+                  <>
                     <Spinner
                       as="span"
                       animation="border"
@@ -268,7 +263,7 @@ const Create = () => {
                       aria-hidden="true"
                     />{" "}
                     Please wait..
-                  </i>
+                  </>
                 ) : (
                   "Publish"
                 )}

@@ -1,4 +1,12 @@
-import { Button, Col, Container, Form, Modal, Row } from "react-bootstrap";
+import {
+  Button,
+  Col,
+  Container,
+  Form,
+  Modal,
+  Row,
+  Spinner,
+} from "react-bootstrap";
 import { BsFillTagFill } from "react-icons/bs";
 import ProgressBar from "@ramonak/react-progress-bar";
 import { useState } from "react";
@@ -15,6 +23,8 @@ import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import { doc, onSnapshot, setDoc, updateDoc } from "firebase/firestore";
 import { firestore } from "../firebase/config";
+import Gift from "../images/giftbox.png";
+import ThankYou from "../images/thankyou.png";
 
 const Details = () => {
   const [fullName, setFullName] = useState("Annonymos");
@@ -23,7 +33,17 @@ const Details = () => {
   const [amount, setAmount] = useState("");
   const [message, setMessage] = useState("");
   const [show, setShow] = useState(false);
-  const dispatch = useDispatch();
+
+  const [thankYou, setThankYou] = useState(false);
+  const [withdrawn, setWithdrawn] = useState(false);
+
+  const [transferMsg, setTransferMsg] = useState(
+    "please confirm the destination account for your funds transfer! +23355545555"
+  );
+  const [btnMsg, setBtnMsg] = useState("Confirm");
+  const [processPayment, setProcessPayment] = useState(false);
+
+  const [showForm, setShowForm] = useState(false);
 
   const user = useSelector((state) => state.user);
 
@@ -62,6 +82,7 @@ const Details = () => {
 
     saveTransactionToFirebase(transactionDetails);
     setShow(false);
+    setThankYou(true);
   };
 
   const onClose = () => {
@@ -83,6 +104,9 @@ const Details = () => {
   };
 
   const handleWithrawal = async () => {
+    setProcessPayment(true);
+    setTransferMsg("proccessing your funds this may take a few minutes...");
+    setBtnMsg("Proccessing...");
     // create transfer recipient
     // let recipientCode = null;
 
@@ -128,6 +152,7 @@ const Details = () => {
     // }
 
     // Test using Flutterwave
+
     const details = {
       account_bank: "MTN",
       account_number: "233540539205",
@@ -158,15 +183,30 @@ const Details = () => {
         },
       });
       console.log("ending trans");
-
+      setThankYou(true);
       console.log({ res });
     } catch (err) {
       console.log(err);
+      setProcessPayment(false);
+      setTransferMsg(err.message);
+      setBtnMsg("Retry");
     }
   };
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+  // show tanks
+  const closeThankYou = () => setThankYou(false);
+  // show withdrawn
+  const closeWithdrawn = () => setWithdrawn(false);
+  const closeForm = () => {
+    setShowForm(false);
+    setTransferMsg(
+      "please confirm the destination account for your funds transfer! +23355545555"
+    );
+    setBtnMsg("Confirm");
+  };
+  const openForm = () => setShowForm(true);
 
   const percentageDonated = ((totalDonations / campaign?.amount) * 100).toFixed(
     2
@@ -187,7 +227,7 @@ const Details = () => {
           >
             <Row className="mb-0 mt-2">
               <Col className="mb-1">
-                <p className="m-0" onClick={handleWithrawal}>
+                <p className="m-0" onClick={openForm}>
                   Target:
                   <span className="text-muted">
                     <NumberFormat
@@ -232,7 +272,7 @@ const Details = () => {
                     margin: "10px 0",
                   }}
                   className="d-block"
-                  onClick={handleShow}
+                  onClick={openForm}
                 >
                   Withdraw Funds
                 </Button>
@@ -344,23 +384,10 @@ const Details = () => {
             />
 
             <div
-              className="mt-3 d-flex justify-content-between align-items-center"
+              className="mt-3 d-flex justify-content-between  flex-column flex-md-row"
               style={{ borderBottom: "1px solid #f1f1f1" }}
             >
-              <div className="my-3 d-flex align-items-center">
-                {/* <img
-                  src={ProfileImage}
-                  alt="profile"
-                  style={{
-                    width: "50px",
-                    height: "50px",
-                    borderRadius: "50%",
-                    background: "#f1f1f1",
-                    marginRight: "10px",
-                    fontSize: "14px",
-                    overflow: "hidden",
-                  }}
-                /> */}
+              <div className="my-3 d-flex align-items-center ">
                 <div
                   style={{
                     width: "50px",
@@ -374,13 +401,15 @@ const Details = () => {
                   <FaRegUser size={22} />
                 </div>
                 <div>
-                  <p className="m-0 text-dark">{campaign?.creatorName}</p>
+                  <p className="m-0 text-dark fw-bold">
+                    {campaign?.creatorName}
+                  </p>
                 </div>
               </div>
 
-              <div>
+              <div className="d-flex justify-content-center flex-column">
                 <p className="m-0">
-                  created on {moment(campaign?.date).format("MMMM D,YYYY")}
+                  Created on {moment(campaign?.date).format("MMMM D,YYYY")}
                 </p>
                 <p className="m-0">
                   <BsFillTagFill /> {campaign?.category}
@@ -390,17 +419,17 @@ const Details = () => {
             <p className="py-3">{campaign?.description}</p>
 
             {campaign?.userId === user?.uid ? (
-              <div className="d-flex justify-content-between">
+              <div className="d-flex justify-content-between flex-column flex-md-row">
                 <Button
                   style={{
                     backgroundColor: "#004c46",
                     color: "#fff",
-                    width: "45%",
                     outline: "none",
                     padding: ".8rem 1rem",
                     border: "none",
                   }}
-                  onClick={handleShow}
+                  className="ms-sm-0 w-100"
+                  onClick={openForm}
                 >
                   Withdraw Funds
                 </Button>
@@ -408,27 +437,26 @@ const Details = () => {
                   style={{
                     backgroundColor: "#fff",
                     color: "#004c46",
-                    width: "45%",
                     outline: "none",
                     padding: ".8rem 1rem",
                     border: "1px solid #004c46",
-                    marginLeft: "10px",
                   }}
+                  className="ms-sm-0 ms-md-3 w-100"
                 >
                   Share
                 </Button>
               </div>
             ) : (
-              <div className="d-flex justify-content-between">
+              <div className="d-flex justify-content-between flex-column flex-md-row">
                 <Button
                   style={{
                     backgroundColor: "#004c46",
                     color: "#fff",
-                    width: "45%",
                     outline: "none",
                     padding: ".8rem 1rem",
                     border: "none",
                   }}
+                  className="ms-sm-0 w-100"
                   onClick={handleShow}
                 >
                   Donate Now
@@ -437,12 +465,11 @@ const Details = () => {
                   style={{
                     backgroundColor: "#fff",
                     color: "#004c46",
-                    width: "45%",
                     outline: "none",
                     padding: ".8rem 1rem",
                     border: "1px solid #004c46",
-                    marginLeft: "10px",
                   }}
+                  className="ms-sm-0 ms-md-3 mt-sm-3 w-100"
                 >
                   Share
                 </Button>
@@ -451,7 +478,7 @@ const Details = () => {
           </Col>
         </Row>
 
-        {/* Modal section */}
+        {/* Payment Modal section */}
         <Modal show={show} onHide={handleClose}>
           <Modal.Header closeButton>
             <Modal.Title>make donation</Modal.Title>
@@ -552,6 +579,96 @@ const Details = () => {
               onClick={handlePayment}
             >
               Donate
+            </Button>
+          </Modal.Footer>
+        </Modal>
+
+        {/* Successful Donations */}
+        <Modal show={thankYou} onHide={closeThankYou}>
+          <Modal.Body className="text-center d-flex justify-content-between align-items-center flex-column">
+            <img src={ThankYou} alt="thank you" className="img-fluid" />
+            <h1>Thank You</h1>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button
+              variant="primary"
+              style={{
+                color: "#fff",
+                backgroundColor: "#004c46",
+                width: "200px",
+                outline: "none",
+                padding: ".6rem .8rem",
+                border: "1px solid #004c46",
+                marginLeft: "10px",
+              }}
+              onClick={closeThankYou}
+            >
+              Close
+            </Button>
+          </Modal.Footer>
+        </Modal>
+
+        {/* Withdrawal Form */}
+        <Modal show={showForm} onHide={closeForm}>
+          <Modal.Body className="text-center d-flex justify-content-between align-items-center flex-column">
+            {/* <h1>Please wait while we transfer your funds</h1> */}
+            <p>{transferMsg}</p>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button
+              variant="primary"
+              style={{
+                color: "#fff",
+                backgroundColor: "#004c46",
+                width: "200px",
+                outline: "none",
+                padding: ".6rem .8rem",
+                border: "1px solid #004c46",
+                marginLeft: "10px",
+              }}
+              disabled={processPayment}
+              onClick={handleWithrawal}
+            >
+              {processPayment ? (
+                <>
+                  <Spinner
+                    as="span"
+                    animation="border"
+                    variant="secondary"
+                    size="sm"
+                    role="status"
+                    aria-hidden="true"
+                  />{" "}
+                  {btnMsg}
+                </>
+              ) : (
+                <>{btnMsg}</>
+              )}
+            </Button>
+          </Modal.Footer>
+        </Modal>
+
+        {/* Successful Withdrawal */}
+        <Modal show={withdrawn} onHide={closeWithdrawn}>
+          <Modal.Body className="text-center d-flex justify-content-between align-items-center flex-column">
+            <img src={Gift} alt="thank you" className="img-fluid" />
+            <h1>Funds Transfered Successfully</h1>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button
+              variant="primary"
+              style={{
+                color: "#fff",
+                backgroundColor: "#004c46",
+                width: "200px",
+                outline: "none",
+                padding: ".6rem .8rem",
+                border: "1px solid #004c46",
+                marginLeft: "10px",
+              }}
+              onClick={closeWithdrawn}
+            >
+              Close
             </Button>
           </Modal.Footer>
         </Modal>

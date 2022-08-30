@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Col, Container, Form, Pagination, Row } from "react-bootstrap";
 import CampaignCard from "../component/CampaignCard";
-import { useSelector } from "react-redux";
 import useGetCampaign from "../hooks/useGetCampaign";
+import NoData from "../images/nodata.png";
 
 const AllCampaigns = () => {
   const { campaigns } = useGetCampaign();
@@ -74,8 +74,16 @@ const AllCampaigns = () => {
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
+              flexDirection: "column",
             }}
           >
+            <img
+              src={NoData}
+              alt="no data found"
+              className="img-fluid"
+              width="150"
+              height="150"
+            />
             <h1>No Campaigns Found!</h1>
           </div>
         )}
