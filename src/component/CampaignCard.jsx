@@ -41,11 +41,11 @@ function CampaignCard({ campaign }) {
             <Card.Body>
               <Row>
                 <Col lg="12" className="mb-2">
-                  <h4>
+                  <h5 className="fw-bold">
                     {campaign?.title.length < 20
                       ? campaign.title
                       : campaign?.title.substr(0, 20) + "..."}
-                  </h4>
+                  </h5>
 
                   <Card.Text style={{ fontFamily: "Poppins" }}>
                     {campaign?.description.length < 50

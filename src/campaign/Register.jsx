@@ -3,6 +3,7 @@ import { Form, Button, Container, Alert, Spinner } from "react-bootstrap";
 import { Link, useNavigate, Navigate } from "react-router-dom";
 import { registerUser, setUser } from "../redux/actions";
 import { useDispatch, useSelector } from "react-redux";
+import ScrollToTop from "../component/ScrollToTop";
 
 const Register = () => {
   const [fullName, setFullName] = useState("");
@@ -68,7 +69,7 @@ const Register = () => {
   return user ? (
     <Navigate to="/my-campaigns" replace={true} />
   ) : (
-    <div>
+    <ScrollToTop>
       <Container
         className="py-5"
         style={{
@@ -197,7 +198,7 @@ const Register = () => {
           </Form>
         </div>
       </Container>
-    </div>
+    </ScrollToTop>
   );
 };
 

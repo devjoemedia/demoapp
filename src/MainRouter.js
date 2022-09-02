@@ -7,6 +7,7 @@ import Details from "./campaign/Details";
 import AllCampaigns from "./campaign/AllCampaigns";
 import Login from "./campaign/Login";
 import Register from "./campaign/Register";
+import Edit from "./campaign/Edit";
 
 function Router() {
   return (
@@ -23,6 +24,7 @@ function Router() {
           <Route index element={<AllCampaigns />} />
           <Route path=":id" element={<Details />} />
           <Route exact path="create" element={<Create />} />
+          <Route exact path="edit/:id" element={<Edit />} />
         </Route>
       </Routes>
     </div>

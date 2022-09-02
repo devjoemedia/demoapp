@@ -1,40 +1,50 @@
 import { useState } from "react";
 import { Col, Container, Form, Pagination, Row } from "react-bootstrap";
 import CampaignCard from "../component/CampaignCard";
+import ScrollToTop from "../component/ScrollToTop";
 import useGetCampaign from "../hooks/useGetCampaign";
 import NoData from "../images/nodata.png";
 
 const AllCampaigns = () => {
-  const { campaigns } = useGetCampaign();
+  let { campaigns } = useGetCampaign();
 
   const [search, setSearch] = useState("");
+  let list = [...campaigns];
 
   const handleSearch = (e) => {
     e.preventDefault();
+    setSearch(e.target.value);
+    // let text = e.target.value;
   };
 
+  list = campaigns.filter((campaign) => {
+    if (
+      campaign.title.toLowerCase().includes(search.toLowerCase()) ||
+      campaign.description.toLowerCase().includes(search.toLowerCase()) ||
+      campaign.category.toLowerCase().includes(search.toLowerCase())
+    ) {
+      return campaign;
+    }
+  });
+
   return (
-    <div>
+    <ScrollToTop>
       <Container className="py-5">
-        {campaigns.length > 0 ? (
+        <Col xs={12}>
+          <Form.Group className="mb-3" controlId="formBasicEmail">
+            <Form.Label className="fw-bold">Search</Form.Label>
+            <Form.Control
+              size="lg"
+              type="text"
+              placeholder="Enter Search term"
+              value={search}
+              onChange={(e) => handleSearch(e)}
+              style={{ fontSize: "18px" }}
+            />
+          </Form.Group>
+        </Col>
+        {list.length > 0 ? (
           <Row className="py-2">
-            <Col xs={12} sm={6}>
-              <Form.Group
-                onSubmit={handleSearch}
-                className="mb-3"
-                controlId="formBasicEmail"
-              >
-                <Form.Label>Search</Form.Label>
-                <Form.Control
-                  size="lg"
-                  type="text"
-                  placeholder="Enter Search term"
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  style={{ fontSize: "18px" }}
-                />
-              </Form.Group>
-            </Col>
             <h1
               className="mb-3"
               style={{
@@ -45,10 +55,10 @@ const AllCampaigns = () => {
             >
               Campaigns
             </h1>
-            {campaigns?.map((campaign, index) => {
+            {list?.map((campaign, index) => {
               return (
                 <CampaignCard
-                  key={campaign.id}
+                  key={campaign?.id}
                   campaign={campaign}
                   index={index}
                 />
@@ -88,7 +98,7 @@ const AllCampaigns = () => {
           </div>
         )}
       </Container>
-    </div>
+    </ScrollToTop>
   );
 };
 

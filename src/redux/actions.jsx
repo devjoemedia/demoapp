@@ -75,10 +75,10 @@ export const login = async (email, password) => {
 
     const user = userCredentials.user;
 
-    const docRef = doc(firestore, "users", user.uid);
+    const docRef = doc(firestore, "users", user?.uid);
     const docSnap = await getDoc(docRef);
 
-    const userData = { ...docSnap.data(), email, uid: user.uid };
+    const userData = { ...docSnap.data(), email, uid: user?.uid };
 
     if (docSnap.exists()) {
       return userData;

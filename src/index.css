@@ -67,3 +67,10 @@ body {
   outline: none;
   border-color: #004c46;
 }
+
+.form-control:focus {
+  /* outline: none; */
+  /* box-shadow: none; */
+  /* border: 0; */
+  border-color: "#fff";
+}

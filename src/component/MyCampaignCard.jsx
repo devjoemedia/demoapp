@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import useGetCampaignTransactions from "../hooks/useGetCampaignTransactions";
 import axios from "axios";
 import Gift from "../images/giftbox.png";
+import { MdModeEditOutline } from "react-icons/md";
 
 const MyCampaignCard = ({ campaign }) => {
   const [message, setMessage] = useState(
@@ -71,7 +72,6 @@ const MyCampaignCard = ({ campaign }) => {
           Accept: "*",
         },
       });
-      console.log("ending trans");
 
       console.log({ res });
       setShowForm(false);
@@ -99,6 +99,22 @@ const MyCampaignCard = ({ campaign }) => {
             background: "#fff",
           }}
         >
+          <Link
+            to={"/campaigns/edit/" + campaign?.id}
+            style={{
+              textDecoration: "none",
+              position: "absolute",
+              right: "5px",
+              top: "5px",
+              backgroundColor: "rgba(0, 76, 70, .81)",
+              height: "40px",
+              width: "40px",
+              borderRadius: "50%",
+            }}
+            className="text-white d-flex align-items-center justify-content-center"
+          >
+            <MdModeEditOutline />
+          </Link>
           <Link
             to={"/campaigns/" + campaign?.id}
             style={{ textDecoration: "none" }}

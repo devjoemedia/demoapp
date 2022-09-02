@@ -25,6 +25,9 @@ import { doc, onSnapshot, setDoc, updateDoc } from "firebase/firestore";
 import { firestore } from "../firebase/config";
 import Gift from "../images/giftbox.png";
 import ThankYou from "../images/thankyou.png";
+import { MdModeEditOutline } from "react-icons/md";
+import { Link } from "react-router-dom";
+import ScrollToTop from "../component/ScrollToTop";
 
 const Details = () => {
   const [fullName, setFullName] = useState("Annonymos");
@@ -171,10 +174,10 @@ const Details = () => {
     // initiate transfer
     try {
       console.log("starting trans");
-      const url = "https://api.flutterwave.com/v3/transfers";
+      const url = "https://api.flutterwave.com/v3/transfers/";
       const res = await axios({
         url,
-        method: "get",
+        method: "GET",
         details,
         headers: {
           "Content-Type": "application/json",
@@ -213,7 +216,7 @@ const Details = () => {
   );
 
   return (
-    <>
+    <ScrollToTop>
       <Container>
         <Row className="justify-content-between py-4">
           <Col
@@ -377,11 +380,38 @@ const Details = () => {
           </Col>
 
           <Col sm={12} md={7}>
-            <img
-              src={campaign?.image}
-              alt="banner"
-              style={{ height: "350px", width: "100%", borderRadius: "10px" }}
-            />
+            <div style={{ position: "relative" }}>
+              <img
+                src={campaign?.image}
+                alt="banner"
+                style={{
+                  // objectFit: "contain",
+                  height: "350px",
+                  width: "100%",
+                  borderRadius: "10px",
+                }}
+                className="img-fluid"
+              />
+
+              {campaign?.userId === user?.uid && (
+                <Link
+                  to={"/campaigns/edit/" + campaign?.id}
+                  style={{
+                    textDecoration: "none",
+                    position: "absolute",
+                    right: "5px",
+                    top: "5px",
+                    backgroundColor: "rgba(0, 76, 70, .81)",
+                    height: "40px",
+                    width: "40px",
+                    borderRadius: "50%",
+                  }}
+                  className="text-white d-flex align-items-center justify-content-center"
+                >
+                  <MdModeEditOutline />
+                </Link>
+              )}
+            </div>
 
             <div
               className="mt-3 d-flex justify-content-between  flex-column flex-md-row"
@@ -472,7 +502,7 @@ const Details = () => {
                     padding: ".8rem 1rem",
                     border: "1px solid #004c46",
                   }}
-                  className="ms-sm-0 ms-md-3 mt-sm-3 w-100"
+                  className="ms-sm-0 ms-md-3  w-100"
                 >
                   Share
                 </Button>
@@ -676,7 +706,7 @@ const Details = () => {
           </Modal.Footer>
         </Modal>
       </Container>
-    </>
+    </ScrollToTop>
   );
 };
 
