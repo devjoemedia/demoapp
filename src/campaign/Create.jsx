@@ -119,7 +119,7 @@ const Create = () => {
 
   return (
     <ScrollToTop>
-      <Container style={{ maxWidth: "600px", padding: "20px 0" }}>
+      <Container style={{ maxWidth: '600px', padding: '20px 0' }}>
         {!user ? (
           <Navigate to="/login" replace={true} />
         ) : (
@@ -132,8 +132,8 @@ const Create = () => {
                     src={previewUrl}
                     alt="banner"
                     style={{
-                      height: "300px",
-                      width: "500px",
+                      height: '300px',
+                      width: '500px',
                     }}
                     fluid
                   />
@@ -142,28 +142,28 @@ const Create = () => {
                 <Form.Label
                   htmlFor="image"
                   style={{
-                    color: "#fff",
-                    backgroundColor: "#004c46",
-                    width: "200px",
-                    outline: "none",
-                    padding: ".4rem .5rem",
-                    border: "1px solid #004c46",
-                    marginTop: "10px",
-                    textAlign: "center",
-                    borderRadius: "3px",
-                    cursor: "pointer",
+                    color: '#fff',
+                    backgroundColor: '#004c46',
+                    width: '200px',
+                    outline: 'none',
+                    padding: '.4rem .5rem',
+                    border: '1px solid #004c46',
+                    marginTop: '10px',
+                    textAlign: 'center',
+                    borderRadius: '3px',
+                    cursor: 'pointer',
                   }}
                 >
-                  {previewUrl ? "change file" : "upload file"}
+                  {previewUrl ? 'change file' : 'upload file'}
                 </Form.Label>
                 <Form.Control
                   id="image"
                   type="file"
                   hidden
                   onChange={(e) => {
-                    setImageUrl(e.target.files[0]);
-                    setPreviewUrl(URL.createObjectURL(e.target.files[0]));
-                    console.log(imageUrl, e.target.files[0]);
+                    setImageUrl(e.target.files[0])
+                    setPreviewUrl(URL.createObjectURL(e.target.files[0]))
+                    console.log(imageUrl, e.target.files[0])
                   }}
                 />
               </Form.Group>
@@ -180,24 +180,24 @@ const Create = () => {
                 <Form.Label className="fw-bold">Category</Form.Label>
                 <div
                   style={{
-                    display: "flex",
-                    flexWrap: "wrap",
+                    display: 'flex',
+                    flexWrap: 'wrap',
                   }}
                 >
                   {categories.map((categoryItem, index) => (
                     <div
                       key={index}
                       style={{
-                        border: "1px solid #004c46",
-                        borderRadius: "30px",
-                        padding: "5px 15px",
-                        display: "inline",
-                        cursor: "pointer",
-                        margin: "5px",
-                        transition: "all 0.2s ease",
+                        border: '1px solid #004c46',
+                        borderRadius: '30px',
+                        padding: '5px 15px',
+                        display: 'inline',
+                        cursor: 'pointer',
+                        margin: '5px',
+                        transition: 'all 0.2s ease',
                         background:
-                          category === categoryItem ? "#004c46" : "#fff",
-                        color: category === categoryItem ? "#fff" : "#004c46",
+                          category === categoryItem ? '#004c46' : '#fff',
+                        color: category === categoryItem ? '#fff' : '#004c46',
                       }}
                       onClick={() => selectCategory(categoryItem)}
                       className="categoryItem"
@@ -230,10 +230,10 @@ const Create = () => {
               /> */}
                 <NumberFormat
                   thousandSeparator={true}
-                  prefix={"$"}
+                  prefix={'₵'}
                   customImput={<Form.Control type="number" />}
                   className="form-control"
-                  placeholder="$55,000"
+                  placeholder="₵55,000"
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
                 />
@@ -264,12 +264,12 @@ const Create = () => {
                   onClick={handlePublish}
                   variant="primary"
                   style={{
-                    color: "#fff",
-                    backgroundColor: "#004c46",
-                    width: "200px",
-                    outline: "none",
-                    padding: ".6rem .8rem",
-                    border: "1px solid #004c46",
+                    color: '#fff',
+                    backgroundColor: '#004c46',
+                    width: '200px',
+                    outline: 'none',
+                    padding: '.6rem .8rem',
+                    border: '1px solid #004c46',
                   }}
                 >
                   {loading ? (
@@ -281,11 +281,11 @@ const Create = () => {
                         size="sm"
                         role="status"
                         aria-hidden="true"
-                      />{" "}
+                      />{' '}
                       Please wait..
                     </>
                   ) : (
-                    "Publish"
+                    'Publish'
                   )}
                 </Button>
               </Form.Group>
@@ -294,7 +294,7 @@ const Create = () => {
         )}
       </Container>
     </ScrollToTop>
-  );
+  )
 };
 
 export default Create;

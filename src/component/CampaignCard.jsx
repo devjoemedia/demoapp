@@ -22,15 +22,15 @@ function CampaignCard({ campaign }) {
         viewport={{ once: false }}
       >
         <Link
-          to={"/campaigns/" + campaign.id}
-          style={{ textDecoration: "none" }}
+          to={'/campaigns/' + campaign.id}
+          style={{ textDecoration: 'none' }}
           className="text-dark"
         >
           <Card
             style={{
-              maxWidth: "345px",
-              border: "1px solid #f1f1f1",
-              background: "#fff",
+              maxWidth: '345px',
+              border: '1px solid #f1f1f1',
+              background: '#fff',
             }}
           >
             <Card.Img
@@ -44,13 +44,13 @@ function CampaignCard({ campaign }) {
                   <h5 className="fw-bold">
                     {campaign?.title.length < 20
                       ? campaign.title
-                      : campaign?.title.substr(0, 20) + "..."}
+                      : campaign?.title.substr(0, 20) + '...'}
                   </h5>
 
-                  <Card.Text style={{ fontFamily: "Poppins" }}>
+                  <Card.Text style={{ fontFamily: 'Poppins' }}>
                     {campaign?.description.length < 50
                       ? campaign.description
-                      : campaign?.description.substr(0, 50) + "..."}
+                      : campaign?.description.substr(0, 50) + '...'}
                   </Card.Text>
 
                   <ProgressBar
@@ -68,20 +68,20 @@ function CampaignCard({ campaign }) {
                         <span className="text-muted">
                           <NumberFormat
                             value={campaign.amount}
-                            displayType={"text"}
+                            displayType={'text'}
                             thousandSeparator={true}
-                            prefix={"$"}
+                            prefix={'₵'}
                           />
                         </span>
                       </p>
                     </Col>
-                    <Col style={{ justifyContent: "end", display: "flex" }}>
+                    <Col style={{ justifyContent: 'end', display: 'flex' }}>
                       <span className="text-muted">
                         <NumberFormat
                           value={totalDonations}
-                          displayType={"text"}
+                          displayType={'text'}
                           thousandSeparator={true}
-                          prefix={"$"}
+                          prefix={'₵'}
                         />
                       </span>
                       <p> ({percentageDonated}%)</p>
@@ -91,12 +91,12 @@ function CampaignCard({ campaign }) {
               </Row>
               <Button
                 style={{
-                  backgroundColor: "#004c46",
-                  color: "#fff",
-                  outline: "none",
-                  fontSize: "14px",
-                  border: "none",
-                  width: "100%",
+                  backgroundColor: '#004c46',
+                  color: '#fff',
+                  outline: 'none',
+                  fontSize: '14px',
+                  border: 'none',
+                  width: '100%',
                 }}
               >
                 Donate now
@@ -106,7 +106,7 @@ function CampaignCard({ campaign }) {
         </Link>
       </motion.div>
     </Col>
-  );
+  )
 }
 
 export default CampaignCard;

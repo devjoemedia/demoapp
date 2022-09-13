@@ -1,19 +1,19 @@
-import ProgressBar from "@ramonak/react-progress-bar";
-import { motion } from "framer-motion";
-import React, { useState } from "react";
-import { Button, Card, Col, Form, Modal, Row, Spinner } from "react-bootstrap";
-import NumberFormat from "react-number-format";
-import { Link } from "react-router-dom";
-import useGetCampaignTransactions from "../hooks/useGetCampaignTransactions";
-import axios from "axios";
-import Gift from "../images/giftbox.png";
-import { MdModeEditOutline } from "react-icons/md";
+import ProgressBar from '@ramonak/react-progress-bar';
+import { motion } from 'framer-motion';
+import React, { useState } from 'react';
+import { Button, Card, Col, Form, Modal, Row, Spinner } from 'react-bootstrap';
+import NumberFormat from 'react-number-format';
+import { Link } from 'react-router-dom';
+import useGetCampaignTransactions from '../hooks/useGetCampaignTransactions';
+import axios from 'axios';
+import Gift from '../images/giftbox.png';
+import { MdModeEditOutline } from 'react-icons/md';
 
 const MyCampaignCard = ({ campaign }) => {
   const [message, setMessage] = useState(
-    "please confirm the destination account for your funds transfer! +23355545555"
+    'please confirm the destination account for your funds transfer! +23355545555'
   );
-  const [btnMsg, setBtnMsg] = useState("Confirm");
+  const [btnMsg, setBtnMsg] = useState('Confirm');
   const [processPayment, setProcessPayment] = useState(false);
 
   const [withdrawn, setWithdrawn] = useState(false);
@@ -31,45 +31,44 @@ const MyCampaignCard = ({ campaign }) => {
   const closeForm = () => {
     setShowForm(false);
     setMessage(
-      "please confirm the destination account for your funds transfer! +23355545555"
+      'please confirm the destination account for your funds transfer! +23355545555'
     );
-    setBtnMsg("Confirm");
+    setBtnMsg('Confirm');
   };
   const openForm = () => setShowForm(true);
 
   // handle Payment
   const handleWithrawal = async () => {
     setProcessPayment(true);
-    setMessage("proccessing your funds this may take a few minutes...");
-    setBtnMsg("Proccessing...");
+    setMessage('proccessing your funds this may take a few minutes...');
+    setBtnMsg('Proccessing...');
 
     // Test using Flutterwave
     const details = {
-      account_bank: "MTN",
-      account_number: "233540539205",
+      account_bank: 'MTN',
+      account_number: '233540539205',
       amount: 100,
-      currency: "GHS",
-      beneficiary_name: "Joseph Nartey",
-      naration: "making withdrawal for campaign" + campaign.id,
-      reference: "121323_PMCKDU_1", //DU_1 is time to change status
+      currency: 'GHS',
+      beneficiary_name: 'Joseph Nartey',
+      naration: 'making withdrawal for campaign' + campaign.id,
+      reference: '121323_PMCKDU_1', //DU_1 is time to change status
       meta: {
-        sender: "FundFair GH",
-        sender_country: "GH",
-        mobile_number: "233547558595",
+        sender: 'FundFair GH',
+        sender_country: 'GH',
+        mobile_number: '233547558595',
       },
     };
 
     // initiate transfer
     try {
-      const url = "https://api.flutterwave.com/v3/transfers";
-      const res = await axios({
-        url,
-        method: "get",
-        details,
+      const url = 'https://api.flutterwave.com/v3/transfers';
+      const res = await fetch(url, {
+        method: 'get',
+        // details,
         headers: {
-          Authorization: "Bearer " + process.env.REACT_APP_PAYSTACK_SECRET_KEY,
-          "Content-Type": "application/json",
-          Accept: "*",
+          Authorization: 'Bearer ' + process.env.REACT_APP_PAYSTACK_SECRET_KEY,
+          'Content-Type': 'application/json',
+          Accept: '*',
         },
       });
 
@@ -81,9 +80,10 @@ const MyCampaignCard = ({ campaign }) => {
       console.log(err);
       setProcessPayment(false);
       setMessage(err.message);
-      setBtnMsg("Retry");
+      setBtnMsg('Retry');
     }
   };
+
   return (
     <Col sm={12} md={6} lg={4} className="my-2" key={campaign?.id}>
       <motion.div
@@ -94,30 +94,30 @@ const MyCampaignCard = ({ campaign }) => {
       >
         <Card
           style={{
-            maxWidth: "345px",
-            border: "1px solid #f1f1f1",
-            background: "#fff",
+            maxWidth: '345px',
+            border: '1px solid #f1f1f1',
+            background: '#fff',
           }}
         >
           <Link
-            to={"/campaigns/edit/" + campaign?.id}
+            to={'/campaigns/edit/' + campaign?.id}
             style={{
-              textDecoration: "none",
-              position: "absolute",
-              right: "5px",
-              top: "5px",
-              backgroundColor: "rgba(0, 76, 70, .81)",
-              height: "40px",
-              width: "40px",
-              borderRadius: "50%",
+              textDecoration: 'none',
+              position: 'absolute',
+              right: '5px',
+              top: '5px',
+              backgroundColor: 'rgba(0, 76, 70, .81)',
+              height: '40px',
+              width: '40px',
+              borderRadius: '50%',
             }}
             className="text-white d-flex align-items-center justify-content-center"
           >
             <MdModeEditOutline />
           </Link>
           <Link
-            to={"/campaigns/" + campaign?.id}
-            style={{ textDecoration: "none" }}
+            to={'/campaigns/' + campaign?.id}
+            style={{ textDecoration: 'none' }}
             className="text-dark"
           >
             <Card.Img
@@ -130,21 +130,20 @@ const MyCampaignCard = ({ campaign }) => {
             <Row>
               <Col lg="12" className="mb-2">
                 <Link
-                  to={"/campaigns/" + campaign?.id}
-                  style={{ textDecoration: "none" }}
+                  to={'/campaigns/' + campaign?.id}
+                  style={{ textDecoration: 'none' }}
                   className="text-dark"
                 >
                   <h4>
                     {campaign?.title.length < 20
                       ? campaign.title
-                      : campaign?.title.substr(0, 20) + "..."}
+                      : campaign?.title.substr(0, 20) + '...'}
                   </h4>
                 </Link>
-
-                <Card.Text style={{ fontFamily: "Poppins" }}>
+                <Card.Text style={{ fontFamily: 'Poppins' }}>
                   {campaign?.description.length < 50
                     ? campaign.description
-                    : campaign?.description.substr(0, 50) + "..."}
+                    : campaign?.description.substr(0, 50) + '...'}
                 </Card.Text>
 
                 <ProgressBar
@@ -161,25 +160,25 @@ const MyCampaignCard = ({ campaign }) => {
                       <span className="text-muted">
                         <NumberFormat
                           value={campaign.amount}
-                          displayType={"text"}
+                          displayType={'text'}
                           thousandSeparator={true}
-                          prefix={"$"}
+                          prefix={'₵'}
                         />
                       </span>
                     </p>
                   </Col>
                   <Col
                     style={{
-                      justifyContent: "end",
-                      display: "flex",
+                      justifyContent: 'end',
+                      display: 'flex',
                     }}
                   >
                     <span className="text-muted">
                       <NumberFormat
                         value={totalDonations}
-                        displayType={"text"}
+                        displayType={'text'}
                         thousandSeparator={true}
-                        prefix={"$"}
+                        prefix={'₵'}
                       />
                     </span>
                     <p>({percentageDonated | 0}%)</p>
@@ -189,12 +188,12 @@ const MyCampaignCard = ({ campaign }) => {
             </Row>
             <Button
               style={{
-                backgroundColor: "#004c46",
-                color: "#fff",
-                outline: "none",
-                fontSize: "14px",
-                border: "none",
-                width: "100%",
+                backgroundColor: '#004c46',
+                color: '#fff',
+                outline: 'none',
+                fontSize: '14px',
+                border: 'none',
+                width: '100%',
               }}
               // onClick={handleWithrawal}
               onClick={openForm}
@@ -215,13 +214,13 @@ const MyCampaignCard = ({ campaign }) => {
           <Button
             variant="primary"
             style={{
-              color: "#fff",
-              backgroundColor: "#004c46",
-              width: "200px",
-              outline: "none",
-              padding: ".6rem .8rem",
-              border: "1px solid #004c46",
-              marginLeft: "10px",
+              color: '#fff',
+              backgroundColor: '#004c46',
+              width: '200px',
+              outline: 'none',
+              padding: '.6rem .8rem',
+              border: '1px solid #004c46',
+              marginLeft: '10px',
             }}
             disabled={processPayment}
             onClick={handleWithrawal}
@@ -235,7 +234,7 @@ const MyCampaignCard = ({ campaign }) => {
                   size="sm"
                   role="status"
                   aria-hidden="true"
-                />{" "}
+                />{' '}
                 {btnMsg}
               </>
             ) : (
@@ -255,13 +254,13 @@ const MyCampaignCard = ({ campaign }) => {
           <Button
             variant="primary"
             style={{
-              color: "#fff",
-              backgroundColor: "#004c46",
-              width: "200px",
-              outline: "none",
-              padding: ".6rem .8rem",
-              border: "1px solid #004c46",
-              marginLeft: "10px",
+              color: '#fff',
+              backgroundColor: '#004c46',
+              width: '200px',
+              outline: 'none',
+              padding: '.6rem .8rem',
+              border: '1px solid #004c46',
+              marginLeft: '10px',
             }}
             onClick={closeWithdrawn}
           >
@@ -270,7 +269,7 @@ const MyCampaignCard = ({ campaign }) => {
         </Modal.Footer>
       </Modal>
     </Col>
-  );
+  )
 };
 
 export default MyCampaignCard;

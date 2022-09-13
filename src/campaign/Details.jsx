@@ -31,10 +31,8 @@ import ScrollToTop from "../component/ScrollToTop";
 
 const Details = () => {
   const [fullName, setFullName] = useState("Annonymos");
-  const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [amount, setAmount] = useState("");
-  const [message, setMessage] = useState("");
   const [show, setShow] = useState(false);
 
   const [thankYou, setThankYou] = useState(false);
@@ -66,8 +64,6 @@ const Details = () => {
     metadata: {
       campaignId: id,
       fullName,
-      phone,
-      message,
     },
   };
 
@@ -78,8 +74,6 @@ const Details = () => {
       amount: amount * 100,
       campaignId: id,
       fullName,
-      phone,
-      message,
       createdAt: Date.now(),
     };
 
@@ -223,9 +217,9 @@ const Details = () => {
             sm={12}
             md={4}
             style={{
-              padding: "20px",
+              padding: '20px',
               boxShadow:
-                "0 4px 6px -1px rgba(0, 0, 0, 0.1),0 2px 4px -1px rgba(0, 0, 0, 0.06)",
+                '0 4px 6px -1px rgba(0, 0, 0, 0.1),0 2px 4px -1px rgba(0, 0, 0, 0.06)',
             }}
           >
             <Row className="mb-0 mt-2">
@@ -235,20 +229,20 @@ const Details = () => {
                   <span className="text-muted">
                     <NumberFormat
                       value={campaign?.amount}
-                      displayType={"text"}
+                      displayType={'text'}
                       thousandSeparator={true}
-                      prefix={"$"}
+                      prefix={'₵'}
                     />
                   </span>
                 </p>
               </Col>
-              <Col style={{ justifyContent: "end", display: "flex" }}>
+              <Col style={{ justifyContent: 'end', display: 'flex' }}>
                 <span className="text-muted">
                   <NumberFormat
                     value={totalDonations}
-                    displayType={"text"}
+                    displayType={'text'}
                     thousandSeparator={true}
-                    prefix={"$"}
+                    prefix={'₵'}
                   />
                 </span>
                 <p> ({percentageDonated | 0}%)</p>
@@ -266,13 +260,13 @@ const Details = () => {
               <div className=" mt-3">
                 <Button
                   style={{
-                    backgroundColor: "#004c46",
-                    color: "#fff",
-                    width: "100%",
-                    outline: "none",
-                    padding: ".8rem 1rem",
-                    border: "none",
-                    margin: "10px 0",
+                    backgroundColor: '#004c46',
+                    color: '#fff',
+                    width: '100%',
+                    outline: 'none',
+                    padding: '.8rem 1rem',
+                    border: 'none',
+                    margin: '10px 0',
                   }}
                   className="d-block"
                   onClick={openForm}
@@ -284,13 +278,13 @@ const Details = () => {
               <div className=" mt-3">
                 <Button
                   style={{
-                    backgroundColor: "#004c46",
-                    color: "#fff",
-                    width: "100%",
-                    outline: "none",
-                    padding: ".8rem 1rem",
-                    border: "none",
-                    margin: "10px 0",
+                    backgroundColor: '#004c46',
+                    color: '#fff',
+                    width: '100%',
+                    outline: 'none',
+                    padding: '.8rem 1rem',
+                    border: 'none',
+                    margin: '10px 0',
                   }}
                   className="d-block"
                   onClick={handleShow}
@@ -299,13 +293,13 @@ const Details = () => {
                 </Button>
                 <Button
                   style={{
-                    backgroundColor: "#fff",
-                    color: "#004c46",
-                    width: "100%",
-                    outline: "none",
-                    padding: ".8rem 1rem",
-                    border: "1px solid #004c46",
-                    margin: "10px 0",
+                    backgroundColor: '#fff',
+                    color: '#004c46',
+                    width: '100%',
+                    outline: 'none',
+                    padding: '.8rem 1rem',
+                    border: '1px solid #004c46',
+                    margin: '10px 0',
                   }}
                   className="d-block"
                   onClick={handleShow}
@@ -316,8 +310,8 @@ const Details = () => {
             )}
 
             <div className="d-flex align-items-center justify-content-between  my-3 mt-4">
-              <h5 style={{ fontSize: "14px" }}>Last 5 donations</h5>
-              <h5 style={{ fontSize: "14px" }}>
+              <h5 style={{ fontSize: '14px' }}>Last 5 donations</h5>
+              <h5 style={{ fontSize: '14px' }}>
                 {millify(transactions?.length)} donations
               </h5>
             </div>
@@ -327,16 +321,16 @@ const Details = () => {
                 <div
                   key={transaction.reference}
                   className="d-flex justify-content-between align-items-center my-3 "
-                  style={{ fontSize: "12px" }}
+                  style={{ fontSize: '12px' }}
                 >
                   <div className="d-flex align-items-center">
                     <div
                       style={{
-                        width: "40px",
-                        height: "40px",
-                        borderRadius: "50%",
-                        background: "#f1f1f1",
-                        padding: "0px",
+                        width: '40px',
+                        height: '40px',
+                        borderRadius: '50%',
+                        background: '#f1f1f1',
+                        padding: '0px',
                       }}
                       className="me-2 d-flex align-items-center justify-content-center"
                     >
@@ -355,9 +349,9 @@ const Details = () => {
                   <p>
                     <NumberFormat
                       value={(transaction.amount / 100).toFixed(2)}
-                      displayType={"text"}
+                      displayType={'text'}
                       thousandSeparator={true}
-                      prefix={"$"}
+                      prefix={'₵'}
                     />
                   </p>
                 </div>
@@ -365,13 +359,13 @@ const Details = () => {
 
             <Button
               style={{
-                backgroundColor: "#004c46",
-                color: "#fff",
-                width: "100%",
-                outline: "none",
-                padding: ".8rem 1rem",
-                border: "none",
-                margin: "10px 0",
+                backgroundColor: '#004c46',
+                color: '#fff',
+                width: '100%',
+                outline: 'none',
+                padding: '.8rem 1rem',
+                border: 'none',
+                margin: '10px 0',
               }}
               className="d-block mt-4"
             >
@@ -380,31 +374,31 @@ const Details = () => {
           </Col>
 
           <Col sm={12} md={7}>
-            <div style={{ position: "relative" }}>
+            <div style={{ position: 'relative' }}>
               <img
                 src={campaign?.image}
                 alt="banner"
                 style={{
                   // objectFit: "contain",
-                  height: "350px",
-                  width: "100%",
-                  borderRadius: "10px",
+                  height: '350px',
+                  width: '100%',
+                  borderRadius: '10px',
                 }}
                 className="img-fluid"
               />
 
               {campaign?.userId === user?.uid && (
                 <Link
-                  to={"/campaigns/edit/" + campaign?.id}
+                  to={'/campaigns/edit/' + campaign?.id}
                   style={{
-                    textDecoration: "none",
-                    position: "absolute",
-                    right: "5px",
-                    top: "5px",
-                    backgroundColor: "rgba(0, 76, 70, .81)",
-                    height: "40px",
-                    width: "40px",
-                    borderRadius: "50%",
+                    textDecoration: 'none',
+                    position: 'absolute',
+                    right: '5px',
+                    top: '5px',
+                    backgroundColor: 'rgba(0, 76, 70, .81)',
+                    height: '40px',
+                    width: '40px',
+                    borderRadius: '50%',
                   }}
                   className="text-white d-flex align-items-center justify-content-center"
                 >
@@ -415,16 +409,16 @@ const Details = () => {
 
             <div
               className="mt-3 d-flex justify-content-between  flex-column flex-md-row"
-              style={{ borderBottom: "1px solid #f1f1f1" }}
+              style={{ borderBottom: '1px solid #f1f1f1' }}
             >
               <div className="my-3 d-flex align-items-center ">
                 <div
                   style={{
-                    width: "50px",
-                    height: "50px",
-                    borderRadius: "50%",
-                    background: "#f1f1f1",
-                    padding: "0px",
+                    width: '50px',
+                    height: '50px',
+                    borderRadius: '50%',
+                    background: '#f1f1f1',
+                    padding: '0px',
                   }}
                   className="me-2 d-flex align-items-center justify-content-center"
                 >
@@ -439,7 +433,7 @@ const Details = () => {
 
               <div className="d-flex justify-content-center flex-column">
                 <p className="m-0">
-                  Created on {moment(campaign?.date).format("MMMM D,YYYY")}
+                  Created on {moment(campaign?.date).format('MMMM D,YYYY')}
                 </p>
                 <p className="m-0">
                   <BsFillTagFill /> {campaign?.category}
@@ -455,11 +449,11 @@ const Details = () => {
               <div className="d-flex justify-content-between flex-column flex-md-row">
                 <Button
                   style={{
-                    backgroundColor: "#004c46",
-                    color: "#fff",
-                    outline: "none",
-                    padding: ".8rem 1rem",
-                    border: "none",
+                    backgroundColor: '#004c46',
+                    color: '#fff',
+                    outline: 'none',
+                    padding: '.8rem 1rem',
+                    border: 'none',
                   }}
                   className="ms-sm-0 w-100"
                   onClick={openForm}
@@ -468,11 +462,11 @@ const Details = () => {
                 </Button>
                 <Button
                   style={{
-                    backgroundColor: "#fff",
-                    color: "#004c46",
-                    outline: "none",
-                    padding: ".8rem 1rem",
-                    border: "1px solid #004c46",
+                    backgroundColor: '#fff',
+                    color: '#004c46',
+                    outline: 'none',
+                    padding: '.8rem 1rem',
+                    border: '1px solid #004c46',
                   }}
                   className="ms-sm-0 ms-md-3 w-100"
                 >
@@ -483,11 +477,11 @@ const Details = () => {
               <div className="d-flex justify-content-between flex-column flex-md-row">
                 <Button
                   style={{
-                    backgroundColor: "#004c46",
-                    color: "#fff",
-                    outline: "none",
-                    padding: ".8rem 1rem",
-                    border: "none",
+                    backgroundColor: '#004c46',
+                    color: '#fff',
+                    outline: 'none',
+                    padding: '.8rem 1rem',
+                    border: 'none',
                   }}
                   className="ms-sm-0 w-100"
                   onClick={handleShow}
@@ -496,11 +490,11 @@ const Details = () => {
                 </Button>
                 <Button
                   style={{
-                    backgroundColor: "#fff",
-                    color: "#004c46",
-                    outline: "none",
-                    padding: ".8rem 1rem",
-                    border: "1px solid #004c46",
+                    backgroundColor: '#fff',
+                    color: '#004c46',
+                    outline: 'none',
+                    padding: '.8rem 1rem',
+                    border: '1px solid #004c46',
                   }}
                   className="ms-sm-0 ms-md-3  w-100"
                 >
@@ -549,35 +543,12 @@ const Details = () => {
                 className="mb-3"
                 controlId="exampleForm.ControlInput1"
               >
-                <Form.Label>Phone</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="0546655665"
-                  autoFocus
-                  onChange={(e) => setPhone(e.target.value)}
-                />
-              </Form.Group>
-              <Form.Group
-                className="mb-3"
-                controlId="exampleForm.ControlInput1"
-              >
                 <Form.Label>Amount* </Form.Label>
                 <Form.Control
                   type="number"
                   placeholder="100"
                   autoFocus
                   onChange={(e) => setAmount(e.target.value)}
-                />
-              </Form.Group>
-              <Form.Group
-                className="mb-3"
-                controlId="exampleForm.ControlTextarea1"
-              >
-                <Form.Label>Message</Form.Label>
-                <Form.Control
-                  as="textarea"
-                  rows={3}
-                  onChange={(e) => setMessage(e.target.value)}
                 />
               </Form.Group>
             </Form>
@@ -587,13 +558,13 @@ const Details = () => {
               variant="secondary"
               onClick={handleClose}
               style={{
-                backgroundColor: "#fff",
-                color: "#004c46",
-                width: "200px",
-                outline: "none",
-                padding: ".6rem .8rem",
-                border: "1px solid #004c46",
-                marginLeft: "10px",
+                backgroundColor: '#fff',
+                color: '#004c46',
+                width: '200px',
+                outline: 'none',
+                padding: '.6rem .8rem',
+                border: '1px solid #004c46',
+                marginLeft: '10px',
               }}
             >
               Cancel
@@ -601,13 +572,13 @@ const Details = () => {
             <Button
               variant="primary"
               style={{
-                color: "#fff",
-                backgroundColor: "#004c46",
-                width: "200px",
-                outline: "none",
-                padding: ".6rem .8rem",
-                border: "1px solid #004c46",
-                marginLeft: "10px",
+                color: '#fff',
+                backgroundColor: '#004c46',
+                width: '200px',
+                outline: 'none',
+                padding: '.6rem .8rem',
+                border: '1px solid #004c46',
+                marginLeft: '10px',
               }}
               onClick={handlePayment}
             >
@@ -626,13 +597,13 @@ const Details = () => {
             <Button
               variant="primary"
               style={{
-                color: "#fff",
-                backgroundColor: "#004c46",
-                width: "200px",
-                outline: "none",
-                padding: ".6rem .8rem",
-                border: "1px solid #004c46",
-                marginLeft: "10px",
+                color: '#fff',
+                backgroundColor: '#004c46',
+                width: '200px',
+                outline: 'none',
+                padding: '.6rem .8rem',
+                border: '1px solid #004c46',
+                marginLeft: '10px',
               }}
               onClick={closeThankYou}
             >
@@ -651,13 +622,13 @@ const Details = () => {
             <Button
               variant="primary"
               style={{
-                color: "#fff",
-                backgroundColor: "#004c46",
-                width: "200px",
-                outline: "none",
-                padding: ".6rem .8rem",
-                border: "1px solid #004c46",
-                marginLeft: "10px",
+                color: '#fff',
+                backgroundColor: '#004c46',
+                width: '200px',
+                outline: 'none',
+                padding: '.6rem .8rem',
+                border: '1px solid #004c46',
+                marginLeft: '10px',
               }}
               disabled={processPayment}
               onClick={handleWithrawal}
@@ -671,7 +642,7 @@ const Details = () => {
                     size="sm"
                     role="status"
                     aria-hidden="true"
-                  />{" "}
+                  />{' '}
                   {btnMsg}
                 </>
               ) : (
@@ -691,13 +662,13 @@ const Details = () => {
             <Button
               variant="primary"
               style={{
-                color: "#fff",
-                backgroundColor: "#004c46",
-                width: "200px",
-                outline: "none",
-                padding: ".6rem .8rem",
-                border: "1px solid #004c46",
-                marginLeft: "10px",
+                color: '#fff',
+                backgroundColor: '#004c46',
+                width: '200px',
+                outline: 'none',
+                padding: '.6rem .8rem',
+                border: '1px solid #004c46',
+                marginLeft: '10px',
               }}
               onClick={closeWithdrawn}
             >
@@ -707,7 +678,7 @@ const Details = () => {
         </Modal>
       </Container>
     </ScrollToTop>
-  );
+  )
 };
 
 export default Details;
