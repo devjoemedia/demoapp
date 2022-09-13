@@ -222,17 +222,9 @@ const Create = () => {
 
               <Form.Group className="mb-3">
                 <Form.Label className="fw-bold">Bill Amount</Form.Label>
-                {/* <Form.Control
-                type="number"
-                placeholder="$55,000"
-                value={amount}
-                onChange={(e) => setAmount(e.target.value)}
-              /> */}
-                <NumberFormat
-                  thousandSeparator={true}
-                  prefix={'₵'}
-                  customImput={<Form.Control type="number" />}
-                  className="form-control"
+                
+                <Form.Control
+                  type="number"
                   placeholder="₵55,000"
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
