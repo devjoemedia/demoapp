@@ -379,7 +379,7 @@ const Details = () => {
                 src={campaign?.image}
                 alt="banner"
                 style={{
-                  // objectFit: "contain",
+                  // objectFit: "contain",s
                   height: '350px',
                   width: '100%',
                   borderRadius: '10px',

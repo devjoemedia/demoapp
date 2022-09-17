@@ -8,13 +8,17 @@ import useGetCampaignTransactions from '../hooks/useGetCampaignTransactions';
 import axios from 'axios';
 import Gift from '../images/giftbox.png';
 import { MdModeEditOutline } from 'react-icons/md';
+import { useSelector } from 'react-redux';
+import { firestore } from '../firebase/config';
+import { doc, updateDoc } from 'firebase/firestore';
 
 const MyCampaignCard = ({ campaign }) => {
   const [message, setMessage] = useState(
-    'please confirm the destination account for your funds transfer! +23355545555'
+    ''
   );
   const [btnMsg, setBtnMsg] = useState('Confirm');
   const [processPayment, setProcessPayment] = useState(false);
+  const [disabled, setDisabled] = useState(false);
 
   const [withdrawn, setWithdrawn] = useState(false);
   const [showForm, setShowForm] = useState(false);
@@ -24,64 +28,56 @@ const MyCampaignCard = ({ campaign }) => {
   const percentageDonated = ((totalDonations / campaign.amount) * 100).toFixed(
     2
   );
+  const user = useSelector(state=> state.user)
 
   // show withdrawn
   const closeWithdrawn = () => setWithdrawn(false);
 
+  const p = <p className="fw-bold">₵{totalDonations}</p>
+
   const closeForm = () => {
     setShowForm(false);
     setMessage(
-      'please confirm the destination account for your funds transfer! +23355545555'
-    );
+      `transferring ${p} to ${user?.phone}, please confirm fund transfer.`
+    )
     setBtnMsg('Confirm');
   };
   const openForm = () => setShowForm(true);
 
+  
   // handle Payment
   const handleWithrawal = async () => {
     setProcessPayment(true);
-    setMessage('proccessing your funds this may take a few minutes...');
+    // setMessage('proccessing your funds this may take a few minutes...');
     setBtnMsg('Proccessing...');
 
-    // Test using Flutterwave
-    const details = {
-      account_bank: 'MTN',
-      account_number: '233540539205',
-      amount: 100,
-      currency: 'GHS',
-      beneficiary_name: 'Joseph Nartey',
-      naration: 'making withdrawal for campaign' + campaign.id,
-      reference: '121323_PMCKDU_1', //DU_1 is time to change status
-      meta: {
-        sender: 'FundFair GH',
-        sender_country: 'GH',
-        mobile_number: '233547558595',
-      },
-    };
-
-    // initiate transfer
-    try {
-      const url = 'https://api.flutterwave.com/v3/transfers';
-      const res = await fetch(url, {
-        method: 'get',
-        // details,
-        headers: {
-          Authorization: 'Bearer ' + process.env.REACT_APP_PAYSTACK_SECRET_KEY,
-          'Content-Type': 'application/json',
-          Accept: '*',
-        },
-      });
-
-      console.log({ res });
-      setShowForm(false);
+    
+    setTimeout(() => {
+      setShowForm(false)
       setWithdrawn(true);
       setProcessPayment(false);
-    } catch (err) {
-      console.log(err);
-      setProcessPayment(false);
-      setMessage(err.message);
-      setBtnMsg('Retry');
-    }
+
+    const campaignRef = doc(firestore, 'campaigns', campaign?.id)
+
+    updateDoc(campaignRef, {
+      withdrawn: true
+    })
+
+    
+    },3000)
+
+      
+    // try {
+      
+    //   setShowForm(false);
+    //   setWithdrawn(true);
+    //   setProcessPayment(false);
+    // } catch (err) {
+    //   console.log(err);
+    //   setProcessPayment(false);
+    //   setMessage(err.message);
+    //   setBtnMsg('Retry');
+    // }
   };
 
   return (
@@ -197,8 +193,10 @@ const MyCampaignCard = ({ campaign }) => {
               }}
               // onClick={handleWithrawal}
               onClick={openForm}
+              disabled={campaign?.withdrawn}
             >
-              Withdraw Funds
+              {campaign?.withdrawn? 'Funds Withdrawn' : 'Withdraw Funds'}
+              
             </Button>
           </Card.Body>
         </Card>
@@ -206,9 +204,22 @@ const MyCampaignCard = ({ campaign }) => {
 
       {/* Withdrawal Form */}
       <Modal show={showForm} onHide={closeForm}>
-        <Modal.Body className="text-center d-flex justify-content-between align-items-center flex-column">
-          {/* <h1>Please wait while we transfer your funds</h1> */}
-          <p>{message}</p>
+        <Modal.Body>
+          {/* <p>{message}</p> */}
+          <h5>
+            transferring{' '}
+            <span className="fw-bold">
+              <NumberFormat
+                value={totalDonations}
+                displayType={'text'}
+                thousandSeparator={true}
+                prefix={'₵'}
+              />
+            </span>{' '}
+            to
+            <span className="fw-bold"> {user?.phone}</span>, please confirm fund
+            transfer.
+          </h5>
         </Modal.Body>
         <Modal.Footer>
           <Button
@@ -273,3 +284,33 @@ const MyCampaignCard = ({ campaign }) => {
 };
 
 export default MyCampaignCard;
+
+
+// Test using Flutterwave
+// const details = {
+//   account_bank: 'MTN',
+//   account_number: '233540539205',
+//   amount: 100,
+//   currency: 'GHS',
+//   beneficiary_name: 'Joseph Nartey',
+//   naration: 'making withdrawal for campaign' + campaign.id,
+//   reference: '121323_PMCKDU_1', //DU_1 is time to change status
+//   meta: {
+//     sender: 'FundFair GH',
+//     sender_country: 'GH',
+//     mobile_number: '233547558595',
+//   },
+// };
+
+// // initiate transfer
+
+//   const url = 'https://api.flutterwave.com/v3/transfers';
+//   const res = await fetch(url, {
+//     method: 'get',
+//     // details,
+//     headers: {
+//       Authorization: 'Bearer ' + process.env.REACT_APP_PAYSTACK_SECRET_KEY,
+//       'Content-Type': 'application/json',
+//       Accept: '*',
+//     },
+//   });

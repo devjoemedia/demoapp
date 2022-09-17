@@ -22,7 +22,7 @@ const useGetMyCampaigns = (userId) => {
     };
 
     fetchData();
-  }, [userId]);
+  }, [userId, campaigns]);
 
   return { campaigns };
 };

@@ -8,7 +8,12 @@ const useGetCampaign = (campaignId) => {
 
   useEffect(() => {
     const fetchData = () => {
-      let campaignsRef = collection(firestore, "campaigns");
+      let campaignsRef = collection(firestore, "campaigns", );
+      const q = query(
+        campaignsRef,
+        where('withdrawn', '==', false)
+        // limit(5)
+      )
 
       if (campaignId) {
         const unsub = onSnapshot(
@@ -19,7 +24,7 @@ const useGetCampaign = (campaignId) => {
         );
       }
 
-      const unsub = onSnapshot(campaignsRef, (querySnapshot) => {
+      const unsub = onSnapshot(q, (querySnapshot) => {
         let results = [];
         querySnapshot.forEach((doc) => {
           results.push(doc.data());

@@ -37,11 +37,11 @@ export default function Footer() {
                 <h4 className="m-0">FundFair</h4>
               </Link>
             </Navbar.Brand>
-            <p className="text-white">
+            {/* <p className="text-white">
               Lorem, ipsum dolor sit amet consectetur adipisicing elit. Nemo,
               labore distinctio. Aspernatur eos sequi beatae, consequuntur
               architecto natus voluptas. Voluptatem.
-            </p>
+            </p> */}
             <p className="text-white">
               &copy; 2022 Fund Fair. All Right Reserved
             </p>

@@ -36,8 +36,9 @@ function CampaignCard({ campaign }) {
             <Card.Img
               variant="top"
               src={campaign?.image}
-              style={{ height: 200 }}
+              style={{ height: 200 ,objectFit: 'contain '}}
             />
+            
             <Card.Body>
               <Row>
                 <Col lg="12" className="mb-2">
