@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import ScrollToTop from "../component/ScrollToTop";
 
 const Login = () => {
-  const [email, setEmail] = useState("joenart2@gmail.com");
+  const [email, setEmail] = useState("niiamartey@gmail.com");
   const [password, setPassword] = useState("1234abcd");
   const [loading, setLoading] = useState(false);
   const [emptyfields, setEmptyFields] = useState(false);

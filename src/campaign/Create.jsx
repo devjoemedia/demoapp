@@ -41,9 +41,9 @@ const Create = () => {
 
   const user = useSelector((state) => state.user);
 
-  const [title, setTitle] = useState("");
-  const [amount, setAmount] = useState("");
-  const [description, setDescription] = useState("");
+  const [title, setTitle] = useState("Life Saving Surgery");
+  const [amount, setAmount] = useState("25000");
+  const [description, setDescription] = useState("Nii Amartey is an elderly man who resides in Achimota with an extremely rare illness called Vein of Galen Malformation (VOGM), a rare blood vessel abnormality inside the brain. He was diagnosed some months ago. VOGM is a congenital malformation of a particular vein in the brain that steals blood flow from the body to feed itself and poses significant stress to the heart and brain. Several surgeries are needed to help cure Dada Yaw. we need help to pay for his medical bills ");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [success, setSuccess] = useState(false);
