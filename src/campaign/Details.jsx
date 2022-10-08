@@ -30,8 +30,8 @@ import { Link } from "react-router-dom";
 import ScrollToTop from "../component/ScrollToTop";
 
 const Details = () => {
-  const [fullName, setFullName] = useState("Annonymos");
-  const [email, setEmail] = useState("");
+  const [fullName, setFullName] = useState("Isaac Mensah");
+  const [email, setEmail] = useState("mensah120@gmail.com");
   const [amount, setAmount] = useState("");
   const [show, setShow] = useState(false);
 
@@ -524,6 +524,7 @@ const Details = () => {
                   type="text"
                   placeholder="John Doe"
                   autoFocus
+                  value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
                 />
               </Form.Group>
@@ -536,6 +537,7 @@ const Details = () => {
                   type="email"
                   placeholder="name@example.com"
                   autoFocus
+                  value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
               </Form.Group>
@@ -548,6 +550,7 @@ const Details = () => {
                   type="number"
                   placeholder="100"
                   autoFocus
+                  value={amount}
                   onChange={(e) => setAmount(e.target.value)}
                 />
               </Form.Group>
