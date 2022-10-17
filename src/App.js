@@ -14,8 +14,8 @@ function App() {
     dispatch(setTransactions(transactions));
   }, [transactions, dispatch]);
 
-  return <MainRouter />;
-  // return <Router />;
+  return <Router />;
+  // return <MainRouter />;
 }
 
 export default App;

@@ -5,8 +5,8 @@ import { login, setUser } from "../redux/actions";
 import { useDispatch, useSelector } from "react-redux";
 
 const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("joenart2@gmail.com");
+  const [password, setPassword] = useState("1234abcd");
   const [loading, setLoading] = useState(false);
   const [emptyfields, setEmptyFields] = useState(false);
   const [invalidEmail, setInvalidEmail] = useState(false);

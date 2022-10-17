@@ -7,9 +7,9 @@ import NumberFormat from "react-number-format";
 import useGetCampaignTransactions from "../hooks/useGetCampaignTransactions";
 
 function CampaignCard({ campaign }) {
-  const { totalDonations } = useGetCampaignTransactions(campaign.id);
+  const { totalDonations } = useGetCampaignTransactions(campaign?.id);
 
-  const percentageDonated = ((totalDonations / campaign.amount) * 100).toFixed(
+  const percentageDonated = ((totalDonations / campaign?.amount) * 100).toFixed(
     2
   );
 
@@ -22,7 +22,7 @@ function CampaignCard({ campaign }) {
         viewport={{ once: false }}
       >
         <Link
-          to={'/campaigns/' + campaign.id}
+          to={'/campaigns/' + campaign?.id}
           style={{ textDecoration: 'none' }}
           className="text-dark"
         >
@@ -68,7 +68,7 @@ function CampaignCard({ campaign }) {
                         Target:
                         <span className="text-muted">
                           <NumberFormat
-                            value={campaign.amount}
+                            value={campaign?.amount}
                             displayType={'text'}
                             thousandSeparator={true}
                             prefix={'₵'}

@@ -28,8 +28,8 @@ export default function Header() {
       style={{
         boxShadow:
           "0 4px 6px -1px rgba(0, 0, 0, 0.1),0 2px 4px -1px rgba(0, 0, 0, 0.06)",
-        background: "#fff",
-        // background: location.pathname === "/" ? "#e0ffd6" : "#fff",
+        // background: "#fff",
+        background: location.pathname === "/" ? "#e0ffd6" : "#fff",
       }}
     >
       <Container>
@@ -49,7 +49,15 @@ export default function Header() {
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
-          {user && (
+          <Nav.Link
+            eventKey={1}
+            as={Link}
+            to="/campaigns"
+            style={{ color: "#004c46" }}
+          >
+            Campaigns
+          </Nav.Link>
+          {/* {user && (
             <Nav
               className="mx-auto nav-item"
               style={{
@@ -84,7 +92,7 @@ export default function Header() {
                 Create Campaign
               </Nav.Link>
             </Nav>
-          )}
+          )} */}
           <Nav className="ms-auto nav-item" activeKey={location.pathname}>
             {user ? (
               <>
@@ -104,7 +112,7 @@ export default function Header() {
                 <Nav.Link
                   as={Link}
                   eventKey={4}
-                  to="/my-campaigns"
+                  to="/profile"
                   className="d-flex align-items-center text-decoration-none ms-3"
                   style={{ cursor: "pointer" }}
                 >
@@ -123,19 +131,6 @@ export default function Header() {
                   >
                     <FaRegUser size={22} />
                   </div>
-                  {/* <img
-                    src={ProfileImage}
-                    alt="profile"
-                    style={{
-                      width: "40px",
-                      height: "40px",
-                      borderRadius: "50%",
-                      background: "#f1f1f1",
-                      marginLeft: "10px",
-                      fontSize: "14px",
-                      overflow: "hidden",
-                    }}
-                  /> */}
                 </Nav.Link>
               </>
             ) : (

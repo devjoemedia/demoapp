@@ -17,8 +17,11 @@ import {
 } from "react-icons/md";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import useGetCampaign from '../hooks/useGetCampaign';
 
 function LandingPage() {
+  let { campaigns } = useGetCampaign();
+
   return (
     <>
       <Container fluid style={{ background: "#e0ffd6" }}>
@@ -70,7 +73,7 @@ function LandingPage() {
                   }}
                 >
                   <Link
-                    to="/campaigns/create"
+                    to="/profile/campaigns/create"
                     className="text-white text-decoration-none"
                   >
                     Start a Campaign
@@ -294,9 +297,13 @@ function LandingPage() {
           Trending Campaigns
         </h1>
         <Row className="py-2">
-          <CampaignCard />
-          <CampaignCard />
-          <CampaignCard />
+          {campaigns.slice(0, 3).map((campaign, index) => (
+            <CampaignCard
+              key={campaign?.id}
+              campaign={campaign}
+              index={index}
+            />
+          ))}
         </Row>
       </Container>
 
